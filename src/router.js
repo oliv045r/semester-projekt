@@ -13,7 +13,8 @@ const routes = [
   { path: '/opret-bruger', component: RegisterUser },
   { path: '/log-ind', component: LogIn },
   { path: '/vælg-sværhedsgrad', component: DifficultySelect, meta: { requiresAuth: true } },
-  { path: '/quiz', component: Quiz, meta: { requiresAuth: true } }
+  { path: '/quiz', component: Quiz, meta: { requiresAuth: true } },
+  { path: '/resultat', component: () => import('./views/ResultPage.vue'), meta: { requiresAuth: true } },
 
 ];
 

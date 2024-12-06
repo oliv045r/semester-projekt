@@ -22,13 +22,13 @@ export default {
 #app {
   overflow: hidden;
   width: 100vw;
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  padding-top: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
+  align-items: center;}
 </style>

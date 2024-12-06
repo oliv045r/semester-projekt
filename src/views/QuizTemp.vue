@@ -3,26 +3,22 @@
     <div class="question">{{ currentQuestion.question }}</div>
     <div class="answers">
       <div
-        class="answer right"
-        @touchstart="startSwipe"
-        @touchmove="moveSwipe"
-        @touchend="endSwipe('right')"
-      >
-        {{ currentQuestion.answers[1] }}
-      </div>
-      <div
         class="answer left"
-        @touchstart="startSwipe"
-        @touchmove="moveSwipe"
-        @touchend="endSwipe('left')"
+        v-gesture="handleSwipe"
+        :class="{ swiped: swipedLeft }"
       >
         {{ currentQuestion.answers[0] }}
       </div>
+      <div
+        class="answer right"
+        v-gesture="handleSwipe"
+        :class="{ swiped: swipedRight }"
+      >
+        {{ currentQuestion.answers[1] }}
+      </div>
     </div>
-    <div v-if="feedback" class="feedback">
-      <p>{{ feedback }}</p>
-      <button @click="nextQuestion">Next Question</button>
-    </div>
+    <FeedbackLeft :isVisible="showFeedbackLeft" @next="nextQuestion" />
+    <FeedbackRight :isVisible="showFeedbackRight" @next="nextQuestion" />
   </div>
   <div v-else>
     <p>Loading questions...</p>
@@ -32,16 +28,23 @@
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
 import { collection, getDocs, addDoc } from "firebase/firestore";
+import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
+import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
 export default {
   name: 'QuizTemp',
+  components: {
+    FeedbackLeft,
+    FeedbackRight,
+  },
   data() {
     return {
       questions: [],
       currentQuestionIndex: 0,
-      feedback: null,
-      startX: 0,
-      currentX: 0,
+      swipedLeft: false,
+      swipedRight: false,
+      showFeedbackLeft: false,
+      showFeedbackRight: false,
     };
   },
   computed: {
@@ -61,26 +64,18 @@ export default {
     }
   },
   methods: {
-    startSwipe(event) {
-      this.startX = event.touches[0].clientX;
-    },
-    moveSwipe(event) {
-      this.currentX = event.touches[0].clientX;
-    },
-    endSwipe(side) {
-      const deltaX = this.currentX - this.startX;
-      if ((side === "left" && deltaX > 50) || (side === "right" && deltaX < -50)) {
-        this.checkAnswer(side);
+    handleSwipe(direction) {
+      if (direction === 'left') {
+        this.swipedLeft = true;
+        this.showFeedbackLeft = true;
+      } else if (direction === 'right') {
+        this.swipedRight = true;
+        this.showFeedbackRight = true;
       }
+      this.checkAnswer(direction);
     },
-    checkAnswer(side) {
-      const correctAnswer = this.currentQuestion.correctAnswer;
-      const selectedAnswer = side === "left" ? 0 : 1;
-      if (selectedAnswer === correctAnswer) {
-        this.feedback = "Correct!";
-      } else {
-        this.feedback = "Wrong!";
-      }
+    checkAnswer(direction) {
+      const selectedAnswer = direction === 'left' ? 0 : 1;
       this.logAnswer(selectedAnswer);
     },
     async logAnswer(selectedAnswer) {
@@ -95,8 +90,15 @@ export default {
       }
     },
     nextQuestion() {
-      this.feedback = null;
-      this.currentQuestionIndex++;
+      this.swipedLeft = false;
+      this.swipedRight = false;
+      this.showFeedbackLeft = false;
+      this.showFeedbackRight = false;
+      if (this.currentQuestionIndex < this.questions.length - 1) {
+        this.currentQuestionIndex++;
+      } else {
+        this.$router.push('/resultat');
+      }
     },
   },
 };
@@ -107,42 +109,47 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100vw;
 }
 .question {
   margin: 20px;
   font-size: 24px;
-
 }
 .answers {
   display: flex;
-  justify-content: space-between;
-  width: 100%;  
-  display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 }
 .answer {
-  width: 95%;
-  padding: 20px 0;
-  background-color: #f0f0f0;
+  width: 85%;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
 .answer.left {
-  position: absolute;
-  top: 30rem;
-  left: 0;
-  transform: translateX(-0%);
-  background-color: var(--secondary-color);
+  align-self: flex-end;
+  background-color: var(--main-color);
+  clip-path: polygon(3% 0, 100% 0, 100% 100%, 90% 100%, 3% 100%, 0 50%);
 
 }
+
 .answer.right {
-  position: absolute;
-  top: 20rem;
-  right: 0;
-  transform: translateX(0%);
-  background-color: var(--main-color);
+  margin-top: 1rem;
+  align-self: flex-start;
+  background-color: var(--secondary-color);
+  clip-path: polygon(0% 0, 97% 0, 100% 50%, 97% 100%, 00% 100%, 0 50%);
 }
-.feedback {
-  margin-top: 20px;
+.answer.left.swiped {
+  transform: translateX(-100%);
+}
+.answer.right.swiped {
+  transform: translateX(100%);
 }
 </style>
