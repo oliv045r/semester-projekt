@@ -1,15 +1,18 @@
 <template>
+  <NavHeader></NavHeader>
   <div id="app">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import NavHeader from './components/elements/NavHeader.vue';
+
 
 export default {
   name: 'App',
   components: {
-    
+    NavHeader,
   }
 }
 </script>
@@ -17,10 +20,15 @@ export default {
 <style>
 
 #app {
+  overflow: hidden;
+  width: 100vw;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  margin-top: 60px;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

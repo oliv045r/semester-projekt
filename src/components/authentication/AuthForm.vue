@@ -8,9 +8,9 @@
       <div>
         <input placeholder="Adgangskode" type="password" v-model="password" required />
       </div>
-      <div v-if="showStayLoggedIn">
+      <div class="stay-logged" v-if="showStayLoggedIn">
+        <input type="checkbox" v-model="stayLoggedIn" />
         <label>
-          <input type="checkbox" v-model="stayLoggedIn" />
           Forbliv logget ind
         </label>
       </div>
@@ -20,12 +20,8 @@
 </template>
 
 <script>
-
 export default {
   name: 'AuthForm',
-  components: {
-    
-  },
   props: {
     title: {
       type: String,
@@ -58,6 +54,7 @@ export default {
 <style scoped>
 .auth-form {
   max-width: 400px;
+  min-width: 300px;
   margin: 0 auto;
   padding: 1em;
   border-radius: 4px;
@@ -89,7 +86,7 @@ export default {
 }
 
 .form-btn {
-  width: 80%;
+  width: 100%;
   display: inline-block;
   background-color: var(--secondary-color); /* Blue color */
   color: #fff; /* White text */
@@ -108,6 +105,18 @@ export default {
     background-color: #2c80b4; /* Darker blue on hover */
 }
 
+.stay-logged {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 0.5em;
+}
+.stay-logged input {
+  width: 1rem;
+}
+.stay-logged label {
+  width: 100%;
+}
 
 .auth-form button:hover {
   background-color: #0056b3;

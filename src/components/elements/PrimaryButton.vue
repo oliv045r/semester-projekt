@@ -25,6 +25,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: none;
+  font-family: Poppins;
 }
 
 .primary-button:hover {

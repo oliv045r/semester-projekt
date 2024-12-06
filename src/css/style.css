@@ -1,9 +1,16 @@
 /* src/global.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+}
 
 body {
     background-color: #323232;
     font-family: 'Poppins', sans-serif;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden;
 }
 
 :root {
@@ -15,5 +22,9 @@ body {
 
 
 .secondary-bg-color {
-    background-color: var(--secondary-color) !important;
+    background: var(--secondary-color) !important;
+}
+
+.split-bg-color {
+    background: linear-gradient(to right, var(--main-color) 50%, var(--secondary-color) 50%);
 }
