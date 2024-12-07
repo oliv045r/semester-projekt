@@ -1,6 +1,10 @@
 <template>
   <div class="quiz-container" v-if="questions.length > 0">
-    <div class="question">{{ currentQuestion.question }}</div>
+    <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
+    <div class="question">
+      <h2>{{ currentQuestion.heading }}</h2>
+      <p>{{ currentQuestion.question }}</p>
+    </div>
     <div class="answers">
       <div
         class="answer left"
@@ -17,8 +21,18 @@
         {{ currentQuestion.answers[1] }}
       </div>
     </div>
-    <FeedbackLeft :isVisible="showFeedbackLeft" @next="nextQuestion" />
-    <FeedbackRight :isVisible="showFeedbackRight" @next="nextQuestion" />
+    <FeedbackLeft
+      :isVisible="showFeedbackLeft"
+      :feedbackHeading="currentQuestion.feedbackHeading[0]"
+      :feedbackDesc="currentQuestion.feedbackDesc[0]"
+      @next="nextQuestion"
+    />
+    <FeedbackRight
+      :isVisible="showFeedbackRight"
+      :feedbackHeading="currentQuestion.feedbackHeading[1]"
+      :feedbackDesc="currentQuestion.feedbackDesc[1]"
+      @next="nextQuestion"
+    />
   </div>
   <div v-else>
     <p>Loading questions...</p>
@@ -97,7 +111,7 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
-        this.$router.push('/resultat');
+        this.$router.push('/results');
       }
     },
   },
@@ -115,9 +129,26 @@ export default {
   height: 100%;
   width: 100vw;
 }
+
+.question-number {
+  font-size: 25px;
+  font-weight: 600;
+}
+
 .question {
   margin: 20px;
   font-size: 24px;
+  text-align: left;
+}
+
+.question h2 {
+  font-size: 20px;
+}
+
+.question p {
+  font-size: 18px;
+  margin: 0.5rem 0;
+
 }
 .answers {
   display: flex;
@@ -127,8 +158,8 @@ export default {
 }
 .answer {
   width: 85%;
-  padding: 20px;
-  text-align: center;
+  padding: 30px;
+  text-align: left;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -141,6 +172,8 @@ export default {
 }
 
 .answer.right {
+  padding-left: 40px;
+  padding-right: 20px;
   margin-top: 1rem;
   align-self: flex-start;
   background-color: var(--secondary-color);

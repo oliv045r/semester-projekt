@@ -1,13 +1,9 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
     <img class="feed-img" src="@/assets/images-feedback/giphy.gif" alt="">
-    <h2 class="feed-heading">Godt valg!</h2>
-    <p class="feed-desc"><strong>Vidste du at</strong>
-    <br>
-Ved at vælge HD frem for 4K sparer du nok strøm til at doomscrolle 10 timer på TikTok, og du får stadig 100% fornøjelse for kun 30% af energien!
-
-
-    </p>
+    <h2 class="feed-heading">{{ feedbackHeading }}</h2>
+    <p class="feed-subheading"><strong>Vidste du at</strong></p>
+    <p class="feed-desc">{{ feedbackDesc }}</p>
     <span class="shadow-parent"><button class="feed-right-btn" @click="$emit('next')">Næste</button></span>
   </div>
 </template>
@@ -19,6 +15,14 @@ export default {
     isVisible: {
       type: Boolean,
       default: false
+    },
+    feedbackHeading: {
+      type: String,
+      required: true
+    },
+    feedbackDesc: {
+      type: String,
+      required: true
     }
   }
 };
@@ -28,7 +32,7 @@ export default {
 .feedback-container {
   position: absolute;
   top: 0;
-  right: 100%;
+  left: 100%;
   width: 100%;
   height: 100%;
   background-color: var(--main-color);
@@ -39,7 +43,7 @@ export default {
   transition: transform 0.3s ease;
 }
 .feedback-container.visible {
-  transform: translateX(100%);
+  transform: translateX(-100%);
 }
 
 .feed-img {
@@ -47,7 +51,7 @@ export default {
     border-radius: 15px;
 }
 
-.feed-desc {
+.feed-desc, .feed-subheading {
 margin: 1rem 2rem;    
 text-align: left;
 }

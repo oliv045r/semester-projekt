@@ -1,11 +1,9 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
     <img class="feed-img" src="@/assets/images-feedback/caught-in.gif" alt="">
-    <h2 class="feed-heading">God kvalitet er nice.. MEN</h2>
-    <p class="feed-desc"><strong>Vidste du at</strong>
-    <br>
-    Hvis du vælger 4K i stedet for HD, bruger du nok strøm til at oplade din mobil 20 gange på bare 5 timers streaming.
-    </p>
+    <h2 class="feed-heading">{{ feedbackHeading }}</h2>
+    <p class="feed-subheading"><strong>Vidste du at</strong></p>
+    <p class="feed-desc">{{ feedbackDesc }}</p>
     <span class="shadow-parent"><button class="feed-right-btn" @click="$emit('next')">Næste</button></span>
   </div>
 </template>
@@ -17,6 +15,14 @@ export default {
     isVisible: {
       type: Boolean,
       default: false
+    },
+    feedbackHeading: {
+      type: String,
+      required: true
+    },
+    feedbackDesc: {
+      type: String,
+      required: true
     }
   }
 };
