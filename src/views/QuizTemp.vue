@@ -111,7 +111,7 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
-        this.$router.push('/results');
+        this.$router.push('/resultat');
       }
     },
   },
