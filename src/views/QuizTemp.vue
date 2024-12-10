@@ -40,7 +40,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
@@ -98,12 +98,31 @@ export default {
       if (user) {
         const question = this.currentQuestion;
         const isCorrect = question.answers[selectedAnswer].isCorrect;
-        await addDoc(collection(db, `users/${user.uid}/progress`), {
-          questionId: question.id,
-          selectedAnswer,
-          isCorrect,
-          timestamp: new Date(),
-        });
+
+        // Check if the answer already exists
+        const q = query(
+          collection(db, `users/${user.uid}/progress`),
+          where("questionId", "==", question.id)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          // Update the existing document
+          const docRef = querySnapshot.docs[0].ref;
+          await updateDoc(docRef, {
+            selectedAnswer,
+            isCorrect,
+            timestamp: new Date(),
+          });
+        } else {
+          // Add a new document
+          await addDoc(collection(db, `users/${user.uid}/progress`), {
+            questionId: question.id,
+            selectedAnswer,
+            isCorrect,
+            timestamp: new Date(),
+          });
+        }
       }
     },
     nextQuestion() {
