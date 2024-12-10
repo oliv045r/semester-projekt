@@ -2,8 +2,7 @@
   <div class="quiz-container" v-if="questions.length > 0">
     <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <h2>{{ currentQuestion.heading }}</h2>
-      <p>{{ currentQuestion.question }}</p>
+      <h2>{{ currentQuestion.questionText }}</h2>
     </div>
     <div class="answers">
       <div
@@ -11,26 +10,26 @@
         v-gesture="handleSwipe"
         :class="{ swiped: swipedLeft }"
       >
-        {{ currentQuestion.answers[0] }}
+        {{ currentQuestion.answers[0].text }}
       </div>
       <div
         class="answer right"
         v-gesture="handleSwipe"
         :class="{ swiped: swipedRight }"
       >
-        {{ currentQuestion.answers[1] }}
+        {{ currentQuestion.answers[1].text }}
       </div>
     </div>
     <FeedbackLeft
       :isVisible="showFeedbackLeft"
-      :feedbackHeading="currentQuestion.feedbackHeading[0]"
-      :feedbackDesc="currentQuestion.feedbackDesc[0]"
+      :feedbackHeading="currentQuestion.answers[0].isCorrect ? 'Godt valg!' : 'God kvalitet er nice..MEN'"
+      :feedbackDesc="currentQuestion.answers[0].feedback"
       @next="nextQuestion"
     />
     <FeedbackRight
       :isVisible="showFeedbackRight"
-      :feedbackHeading="currentQuestion.feedbackHeading[1]"
-      :feedbackDesc="currentQuestion.feedbackDesc[1]"
+      :feedbackHeading="currentQuestion.answers[1].isCorrect ? 'Godt valg!' : 'God kvalitet er nice..MEN'"
+      :feedbackDesc="currentQuestion.answers[1].feedback"
       @next="nextQuestion"
     />
   </div>
@@ -41,7 +40,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
@@ -68,7 +67,9 @@ export default {
   },
   async created() {
     try {
-      const querySnapshot = await getDocs(collection(db, "questions"));
+      const quizId = this.$route.params.quizId; // Assuming quizId is passed as a route parameter
+      const q = query(collection(db, "questions"), where("quizId", "==", quizId));
+      const querySnapshot = await getDocs(q);
       this.questions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
@@ -95,10 +96,12 @@ export default {
     async logAnswer(selectedAnswer) {
       const user = auth.currentUser;
       if (user) {
-        await addDoc(collection(db, "userAnswers"), {
-          userId: user.uid,
-          questionId: this.currentQuestion.id,
+        const question = this.currentQuestion;
+        const isCorrect = question.answers[selectedAnswer].isCorrect;
+        await addDoc(collection(db, `users/${user.uid}/progress`), {
+          questionId: question.id,
           selectedAnswer,
+          isCorrect,
           timestamp: new Date(),
         });
       }

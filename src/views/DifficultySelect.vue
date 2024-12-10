@@ -3,12 +3,16 @@
   <div>
     <p>Vælg spiltype/sværhedsgrad</p>
     <img class="swipe-guide" src="@/assets/icons/Swipe-guide.svg" alt="swipe guide for navigation">
-    <div class="btn-container">
-      <router-link to="/quiz">
-        <PrimaryButton class="split-bg-color">50 / 50 - Let</PrimaryButton>
+    <p>50/50</p>
+    <div class="btn-container quiz-swipe">
+      <router-link :to="{ name: 'Quiz', params: { quizId: 'quiz1', level: 1 } }">
+        <PrimaryButton class="split-bg-color">1</PrimaryButton>
       </router-link>
-      <router-link to="#">
-        <PrimaryButton class="split-bg-color">50 / 50 - Svær</PrimaryButton>
+    </div>
+    <p>Quiz</p>
+    <div class="btn-container quiz-quiz">
+      <router-link :to="{ name: 'Quiz', params: { quizId: 'quiz2', level: 1 } }">
+        <PrimaryButton class="split-bg-color">1</PrimaryButton>
       </router-link>
     </div>
   </div>
@@ -27,7 +31,7 @@ export default {
 
 <style scoped>
   .btn-container {
-    margin-top: 5rem;
+    margin-top: 0rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;

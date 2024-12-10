@@ -6,16 +6,17 @@ import RegisterUser from './views/RegisterUser.vue';
 import LogIn from './views/LogIn.vue';
 import DifficultySelect from './views/DifficultySelect.vue';
 import Quiz from './views/QuizTemp.vue';
-
+import ResultPage from './views/ResultPage.vue';
+import AdminPage from './views/AdminPage.vue';
 
 const routes = [
   { path: '/', component: StartPage },
   { path: '/opret-bruger', component: RegisterUser },
   { path: '/log-ind', component: LogIn },
   { path: '/vælg-sværhedsgrad', component: DifficultySelect, meta: { requiresAuth: true } },
-  { path: '/quiz', component: Quiz, meta: { requiresAuth: true } },
-  { path: '/resultat', component: () => import('./views/ResultPage.vue'), meta: { requiresAuth: true } },
-
+  { path: '/quiz/:quizId/:level', name: 'Quiz', component: Quiz, meta: { requiresAuth: true } },
+  { path: '/resultat', component: ResultPage, meta: { requiresAuth: true } },
+  { path: '/admin', component: AdminPage }
 ];
 
 const router = createRouter({
