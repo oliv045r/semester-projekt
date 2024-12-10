@@ -22,13 +22,13 @@
     </div>
     <FeedbackLeft
       :isVisible="showFeedbackLeft"
-      :feedbackHeading="currentQuestion.answers[0].isCorrect ? 'Godt valg!' : 'God kvalitet er nice..MEN'"
+      :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
       :feedbackDesc="currentQuestion.answers[0].feedback"
       @next="nextQuestion"
     />
     <FeedbackRight
       :isVisible="showFeedbackRight"
-      :feedbackHeading="currentQuestion.answers[1].isCorrect ? 'Godt valg!' : 'God kvalitet er nice..MEN'"
+      :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
       :feedbackDesc="currentQuestion.answers[1].feedback"
       @next="nextQuestion"
     />
@@ -67,8 +67,9 @@ export default {
   },
   async created() {
     try {
-      const quizId = this.$route.params.quizId; // Assuming quizId is passed as a route parameter
-      const q = query(collection(db, "questions"), where("quizId", "==", quizId));
+      const level = this.$route.params.level; // Assuming level is passed as a route parameter
+      const quizId = `SwipeQuestions${level}`;
+      const q = query(collection(db, `SwipeQuiz/${quizId}/questions`));
       const querySnapshot = await getDocs(q);
       this.questions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -98,7 +99,8 @@ export default {
       if (user) {
         const question = this.currentQuestion;
         const isCorrect = question.answers[selectedAnswer].isCorrect;
-        const quizId = this.$route.params.quizId; // Get the quizId from the route parameters
+        const level = this.$route.params.level; // Get the level from the route parameters
+        const quizId = `SwipeQuestions${level}`;
 
         // Check if the answer already exists
         const q = query(
@@ -136,8 +138,8 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
-        const quizId = this.$route.params.quizId; // Get the quizId from the route parameters
-        this.$router.push({ name: 'ResultPage', params: { quizId } }); // Navigate to ResultPage with quizId
+        const level = this.$route.params.level; // Get the level from the route parameters
+        this.$router.push({ name: 'ResultPage', params: { level } }); // Navigate to ResultPage with level
       }
     },
   },
@@ -167,15 +169,6 @@ export default {
   text-align: left;
 }
 
-.question h2 {
-  font-size: 20px;
-}
-
-.question p {
-  font-size: 18px;
-  margin: 0.5rem 0;
-
-}
 .answers {
   display: flex;
   flex-direction: column;

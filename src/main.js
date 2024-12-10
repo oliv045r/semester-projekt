@@ -4,9 +4,17 @@ import App from './App.vue';
 import router from './router';
 import './css/style.css'; // Import the global CSS file
 import vGesture from './directives/v-gesture';
+import { auth } from '@/firebase/firebaseConfig';
 
 const app = createApp(App);
 
 app.directive('gesture', vGesture);
 
-app.use(router).mount('#app');
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log('User is logged in:', user); // Debugging line
+  } else {
+    console.log('No user is logged in'); // Debugging line
+  }
+  app.use(router).mount('#app');
+});

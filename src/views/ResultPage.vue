@@ -12,6 +12,7 @@
         </div>
         <div v-if="activeIndex === index" class="accordion-content">
           <p><strong>Selected Answer:</strong> {{ question.selectedAnswerText }}</p>
+          <p><strong>Feedback Heading:</strong> {{ question.feedbackHeading }}</p>
           <p><strong>Feedback:</strong> {{ question.feedback }}</p>
         </div>
       </div>
@@ -22,7 +23,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where, getDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 
 export default {
   name: 'ResultPage',
@@ -33,35 +34,31 @@ export default {
     };
   },
   async created() {
-    const user = auth.currentUser;
-    if (user) {
-      const quizId = this.$route.params.quizId; // Assuming quizId is passed as a route parameter
-      if (quizId) {
-        console.log("Fetching answers for quizId:", quizId); // Debugging
-        const q = query(collection(db, `users/${user.uid}/progress`), where("quizId", "==", quizId));
-        const querySnapshot = await getDocs(q);
-        console.log("Fetched documents:", querySnapshot.docs); // Debugging
+    const level = this.$route.params.level;
+    const quizId = `SwipeQuestions${level}`;
+    if (quizId) {
+      const user = auth.currentUser;
+      const progressRef = collection(db, `users/${user.uid}/progress`);
+      const q = query(progressRef, where("quizId", "==", quizId));
+      const querySnapshot = await getDocs(q);
 
-        const answeredQuestions = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
-          const data = docSnapshot.data();
-          console.log("Document data:", data); // Debugging
+      const answeredQuestions = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+        const data = docSnapshot.data();
+        const questionDoc = await getDoc(doc(db, `SwipeQuiz/${quizId}/questions`, data.questionId));
+        const questionData = questionDoc.data();
 
-          // Fetch question details based on questionId
-          const questionDoc = await getDoc(doc(db, "questions", data.questionId));
-          const questionData = questionDoc.data();
+        return {
+          questionText: questionData.questionText,
+          selectedAnswerText: questionData.answers[data.selectedAnswer].text,
+          feedbackHeading: questionData.answers[data.selectedAnswer].feedbackHeading,
+          feedback: questionData.answers[data.selectedAnswer].feedback,
+          isCorrect: data.isCorrect,
+        };
+      }));
 
-          return {
-            questionText: questionData.questionText,
-            selectedAnswerText: questionData.answers[data.selectedAnswer].text,
-            feedback: questionData.answers[data.selectedAnswer].feedback,
-            isCorrect: data.isCorrect,
-          };
-        }));
-
-        this.answeredQuestions = answeredQuestions;
-      } else {
-        console.error("quizId is undefined");
-      }
+      this.answeredQuestions = answeredQuestions;
+    } else {
+      console.error("quizId is undefined");
     }
   },
   methods: {

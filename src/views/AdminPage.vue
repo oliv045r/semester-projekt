@@ -3,19 +3,14 @@
     <h2>Admin Page</h2>
     <form @submit.prevent="addQuiz">
       <div>
-        <label for="quizId">Quiz ID:</label>
-        <input type="text" v-model="quizId" required />
-      </div>
-      <div>
-        <label for="quizType">Quiz Type:</label>
-        <select v-model="quizType" required>
-          <option value="50/50">50/50</option>
-          <option value="Quiz">Quiz</option>
-        </select>
-      </div>
-      <div>
         <label for="level">Level:</label>
-        <input type="number" v-model="level" required />
+        <select v-model="level" required>
+          <option value="1">Level 1</option>
+          <option value="2">Level 2</option>
+          <option value="3">Level 3</option>
+          <option value="4">Level 4</option>
+          <option value="5">Level 5</option>
+        </select>
       </div>
       <div>
         <label for="questionText">Question Text:</label>
@@ -24,6 +19,8 @@
       <div>
         <label for="answer1">Answer 1:</label>
         <input type="text" v-model="answers[0].text" required />
+        <label for="feedbackHeading1">Feedback Heading 1:</label>
+        <input type="text" v-model="answers[0].feedbackHeading" required />
         <label for="feedback1">Feedback 1:</label>
         <input type="text" v-model="answers[0].feedback" required />
         <div class="input-container">
@@ -34,70 +31,64 @@
       <div>
         <label for="answer2">Answer 2:</label>
         <input type="text" v-model="answers[1].text" required />
+        <label for="feedbackHeading2">Feedback Heading 2:</label>
+        <input type="text" v-model="answers[1].feedbackHeading" required />
         <label for="feedback2">Feedback 2:</label>
         <input type="text" v-model="answers[1].feedback" required />
         <div class="input-container">
           <label for="isCorrect2">Is Correct:</label>
           <input type="checkbox" v-model="answers[1].isCorrect" />
         </div>
-
       </div>
-      <button type="submit">Add Quiz</button>
+      <button type="submit">Add Question</button>
     </form>
   </div>
 </template>
 
 <script>
-import { db } from "@/firebase/firebaseConfig";
+import { db, auth } from "@/firebase/firebaseConfig";
 import { setDoc, doc } from "firebase/firestore";
 
 export default {
   name: 'AdminPage',
   data() {
     return {
-      quizId: '',
-      quizType: '50/50',
       level: 1,
       questionText: '',
       answers: [
-        { text: '', feedback: '', isCorrect: false },
-        { text: '', feedback: '', isCorrect: false }
+        { text: '', feedbackHeading: '', feedback: '', isCorrect: false },
+        { text: '', feedbackHeading: '', feedback: '', isCorrect: false }
       ]
     };
   },
   methods: {
     async addQuiz() {
       try {
-        // Add quiz to quizzes collection
-        await setDoc(doc(db, "quizzes", this.quizId), {
-          quizId: this.quizId,
-          quizType: this.quizType,
-          level: this.level
-        });
-
-        // Add question to questions collection
+        const user = auth.currentUser;
+        if (!user) {
+          throw new Error("User is not authenticated");
+        }
+        const quizId = `SwipeQuestions${this.level}`;
         const questionId = `q${Date.now()}`; // Generate a unique question ID
-        await setDoc(doc(db, "questions", questionId), {
+        await setDoc(doc(db, `SwipeQuiz/${quizId}/questions`, questionId), {
           questionId: questionId,
-          quizId: this.quizId,
+          quizId: quizId,
           questionText: this.questionText,
           answers: this.answers
         });
 
-        alert('Quiz and question added successfully!');
+        alert('Question added successfully!');
         this.resetForm();
       } catch (error) {
-        console.error("Error adding quiz and question:", error);
+        console.error("Error adding question:", error);
       }
     },
     resetForm() {
-      this.quizId = '';
-      this.quizType = '50/50';
       this.level = 1;
       this.questionText = '';
       this.answers = [
-        { text: '', feedback: '', isCorrect: false },
-        { text: '', feedback: '', isCorrect: false }
+        { text: '', feedbackHeading: '', feedback: '', isCorrect: false },
+        { text: '', feedbackHeading: '', feedback: '', isCorrect: false }
       ];
     }
   }
