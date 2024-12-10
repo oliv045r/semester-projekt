@@ -6,16 +6,16 @@
     </div>
     <div class="answers">
       <div
-        class="answer left"
+        class="answer left slide-in-left"
         v-gesture="handleSwipe"
-        :class="{ swiped: swipedLeft }"
+        :class="{ swiped: swipedLeft, active: animateLeft }"
       >
         {{ currentQuestion.answers[0].text }}
       </div>
       <div
-        class="answer right"
+        class="answer right slide-in-right"
         v-gesture="handleSwipe"
-        :class="{ swiped: swipedRight }"
+        :class="{ swiped: swipedRight, active: animateRight }"
       >
         {{ currentQuestion.answers[1].text }}
       </div>
@@ -58,8 +58,12 @@ export default {
       swipedRight: false,
       showFeedbackLeft: false,
       showFeedbackRight: false,
+      animateLeft: false,
+      animateRight: false,
     };
   },
+
+
   computed: {
     currentQuestion() {
       return this.questions[this.currentQuestionIndex] || {};
@@ -80,6 +84,16 @@ export default {
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      setTimeout(() => {
+        vm.animateLeft = true;
+      }, 100);
+      setTimeout(() => {
+        vm.animateRight = true;
+      }, 200);
+    });
   },
   methods: {
     handleSwipe(direction) {
@@ -205,5 +219,27 @@ export default {
 }
 .answer.right.swiped {
   transform: translateX(100%);
+}
+
+.slide-in-left {
+  transform: translateX(100%); 
+  opacity: 0;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.slide-in-left.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-in-right {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.slide-in-right.active {
+  transform: translateX(0);
+  opacity: 1;
 }
 </style>
