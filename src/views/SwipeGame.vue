@@ -1,5 +1,7 @@
 <template>
   <div class="quiz-container" v-if="questions.length > 0">
+    <!-- Swipe Animation: vis kun på spørgsmål 1 i niveau 1 -->
+    <SwipeAnimation v-if="showSwipeAnimation" />
     <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
     <div class="question">
       <h2>{{ currentQuestion.questionText }}</h2>
@@ -43,12 +45,14 @@ import { db, auth } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where, addDoc, updateDoc } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
+import SwipeAnimation from "@/components/elements/SwipeAnimation.vue";
 
 export default {
   name: 'SwipeGame',
   components: {
     FeedbackLeft,
     FeedbackRight,
+    SwipeAnimation,
   },
   data() {
     return {
@@ -58,6 +62,7 @@ export default {
       swipedRight: false,
       showFeedbackLeft: false,
       showFeedbackRight: false,
+      showSwipeAnimation: false, // Tilføj variabel til animation
     };
   },
   computed: {
@@ -67,21 +72,50 @@ export default {
   },
   async created() {
     try {
-      const level = this.$route.params.level; // Assuming level is passed as a route parameter
-      console.log("Fetching questions for level:", level); // Log the level
-      const q = query(collection(db, `SwipeQuestions`), where("SwipeLevel", "==", level.toString())); // Query as string
-      console.log("Query:", q); // Log the query
+      const level = this.$route.params.level; // Hent niveau fra ruten
+      console.log("Fetching questions for level:", level);
+      const q = query(
+        collection(db, `SwipeQuestions`),
+        where("SwipeLevel", "==", level.toString())
+      );
       const querySnapshot = await getDocs(q);
       this.questions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
-      console.log("Fetched questions:", this.questions); // Log the fetched questions
+
+      console.log("Fetched questions:", this.questions);
+
+      // Kontroller, om animation skal vises
+      this.checkForSwipeAnimation();
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
   },
   methods: {
+    checkForSwipeAnimation() {
+      const level = this.$route.params.level;
+      const currentQuestion = this.questions[this.currentQuestionIndex];
+      // Vis animation kun for niveau 1 og spørgsmål med id "q1733840920298"
+      if (
+        level === "1" &&
+        currentQuestion &&
+        currentQuestion.questionId === "q1733840920298"
+      ) {
+        this.showSwipeAnimation = true;
+        setTimeout(() => {
+        const animationElement = document.querySelector(".swipe-animation");
+        if (animationElement) {
+          animationElement.classList.add("hidden"); // Tilføj fade-out klassen
+        }
+        setTimeout(() => {
+          this.showSwipeAnimation = false; // Fjern helt efter fade-out
+        }, 1000); // Match fade-out tiden (1s i CSS)
+      }, 6000);
+      } else {
+        this.showSwipeAnimation = false;
+      }
+    },
     handleSwipe(direction) {
       if (direction === 'left') {
         this.swipedLeft = true;
@@ -101,10 +135,9 @@ export default {
       if (user) {
         const question = this.currentQuestion;
         const isCorrect = question.answers[selectedAnswer].isCorrect;
-        const level = this.$route.params.level; // Get the level from the route parameters
+        const level = this.$route.params.level;
         const quizId = `SwipeQuestions${level}`;
 
-        // Check if the answer already exists
         const q = query(
           collection(db, `users/${user.uid}/progress`),
           where("questionId", "==", question.id)
@@ -112,22 +145,20 @@ export default {
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          // Update the existing document
           const docRef = querySnapshot.docs[0].ref;
           await updateDoc(docRef, {
             selectedAnswer,
             isCorrect,
             timestamp: new Date(),
-            quizId // Include quizId in the document
+            quizId,
           });
         } else {
-          // Add a new document
           await addDoc(collection(db, `users/${user.uid}/progress`), {
             questionId: question.id,
             selectedAnswer,
             isCorrect,
             timestamp: new Date(),
-            quizId // Include quizId in the document
+            quizId,
           });
         }
       }
@@ -137,11 +168,13 @@ export default {
       this.swipedRight = false;
       this.showFeedbackLeft = false;
       this.showFeedbackRight = false;
+
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
+        this.checkForSwipeAnimation(); // Opdater animation baseret på næste spørgsmål
       } else {
-        const level = this.$route.params.level; // Get the level from the route parameters
-        this.$router.push({ name: 'SwipeResult', params: { level } }); // Navigate to SwipeResult with level
+        const level = this.$route.params.level;
+        this.$router.push({ name: 'SwipeResult', params: { level } });
       }
     },
   },
@@ -167,8 +200,9 @@ export default {
 
 .question {
   margin: 20px;
-  font-size: 24px;
+  font-size: 22px;
   text-align: left;
+  font-weight:normal;
 }
 
 .answers {
