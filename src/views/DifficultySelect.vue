@@ -10,7 +10,7 @@
       <p>I denne spiltype skal du swipe dig til det rigtige svar blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
         <router-link :to="{ name: 'Swipe', params: { level: 1 } }">
-          <button class="difficulty-btn dif-active">1</button>
+          <button class="difficulty-btn swipe-active">1</button>
         </router-link>
         <router-link :to="{ name: 'Swipe', params: { level: 2 } }">
           <button class="difficulty-btn">2</button>
@@ -31,7 +31,7 @@
       <p>Har du lært noget af at swipe? Test hvor meget du kan huske!</p>
       <div class="btn-container quiz-swipe">
         <router-link :to="{ name: 'Quiz', params: { level: 1 } }">
-          <button class="difficulty-btn dif-active">1</button>
+          <button class="difficulty-btn quiz-active">1</button>
         </router-link>
         <router-link :to="{ name: 'Quiz', params: { level: 2 } }">
           <button class="difficulty-btn">2</button>
@@ -85,7 +85,10 @@ export default {
   background-color: #949494;
 }
 
-.quiz-swipe .dif-active {
+.swipe-active {
   background-color: var(--secondary-color);
+}
+.quiz-active {
+  background-color: var(--main-color);
 }
 </style>
