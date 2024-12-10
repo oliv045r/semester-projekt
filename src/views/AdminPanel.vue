@@ -5,10 +5,10 @@
             <router-link to="/user-management">
                 <button>Brugere</button>
             </router-link>
-            <router-link to="/swipe-management">
+            <router-link to="/manage-swipe">
                 <button>Administrer Swipe</button>
             </router-link>
-            <router-link to="/order-management">
+            <router-link to="/manage-quiz">
                 <button>Administrer Quiz</button>
             </router-link>
         </div>

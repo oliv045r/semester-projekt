@@ -141,7 +141,7 @@ export default {
         this.currentQuestionIndex++;
       } else {
         const level = this.$route.params.level; // Get the level from the route parameters
-        this.$router.push({ name: 'ResultPage', params: { level } }); // Navigate to ResultPage with level
+        this.$router.push({ name: 'SwipeResult', params: { level } }); // Navigate to SwipeResult with level
       }
     },
   },
