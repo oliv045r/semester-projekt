@@ -1,6 +1,6 @@
 <template>
   <div class="admin-container">
-    <h2>Admin Page</h2>
+    <h2>Tilføj Swipe spørgsmål</h2>
     <form @submit.prevent="addQuiz">
       <div>
         <label for="level">Level:</label>
@@ -50,7 +50,7 @@ import { db, auth } from "@/firebase/firebaseConfig";
 import { setDoc, doc } from "firebase/firestore";
 
 export default {
-  name: 'AdminPage',
+  name: 'AddSwipe',
   data() {
     return {
       level: 1,

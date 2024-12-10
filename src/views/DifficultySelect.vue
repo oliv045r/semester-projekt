@@ -9,19 +9,19 @@
       <h3>To valg, et swipe</h3>
       <p>I denne spiltype skal du swipe dig til det rigtige svar blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
-        <router-link :to="{ name: 'Quiz', params: { level: 1 } }">
+        <router-link :to="{ name: 'Swipe', params: { level: 1 } }">
           <button class="difficulty-btn dif-active">1</button>
         </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 2 } }">
+        <router-link :to="{ name: 'Swipe', params: { level: 2 } }">
           <button class="difficulty-btn">2</button>
         </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 3 } }">
+        <router-link :to="{ name: 'Swipe', params: { level: 3 } }">
           <button class="difficulty-btn">3</button>
         </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 4 } }">
+        <router-link :to="{ name: 'Swipe', params: { level: 4 } }">
           <button class="difficulty-btn">4</button>
         </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 5 } }">
+        <router-link :to="{ name: 'Swipe', params: { level: 5 } }">
           <button class="difficulty-btn">5</button>
         </router-link>
       </div>

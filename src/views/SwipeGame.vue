@@ -45,7 +45,7 @@ import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
 export default {
-  name: 'QuizTemp',
+  name: 'SwipeGame',
   components: {
     FeedbackLeft,
     FeedbackRight,
