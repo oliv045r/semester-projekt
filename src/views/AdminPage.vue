@@ -26,16 +26,21 @@
         <input type="text" v-model="answers[0].text" required />
         <label for="feedback1">Feedback 1:</label>
         <input type="text" v-model="answers[0].feedback" required />
-        <label for="isCorrect1">Is Correct:</label>
-        <input type="checkbox" v-model="answers[0].isCorrect" />
+        <div class="input-container">
+          <label for="isCorrect1">Is Correct:</label>
+          <input type="checkbox" v-model="answers[0].isCorrect" />
+        </div>
       </div>
       <div>
         <label for="answer2">Answer 2:</label>
         <input type="text" v-model="answers[1].text" required />
         <label for="feedback2">Feedback 2:</label>
         <input type="text" v-model="answers[1].feedback" required />
-        <label for="isCorrect2">Is Correct:</label>
-        <input type="checkbox" v-model="answers[1].isCorrect" />
+        <div class="input-container">
+          <label for="isCorrect2">Is Correct:</label>
+          <input type="checkbox" v-model="answers[1].isCorrect" />
+        </div>
+
       </div>
       <button type="submit">Add Quiz</button>
     </form>
@@ -116,6 +121,15 @@ form {
 
 label {
   font-weight: bold;
+}
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input {
+  width: 80%;
 }
 
 input, select {

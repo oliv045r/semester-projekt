@@ -15,7 +15,7 @@ const routes = [
   { path: '/log-ind', component: LogIn },
   { path: '/vælg-sværhedsgrad', component: DifficultySelect, meta: { requiresAuth: true } },
   { path: '/quiz/:quizId/:level', name: 'Quiz', component: Quiz, meta: { requiresAuth: true } },
-  { path: '/resultat', component: ResultPage, meta: { requiresAuth: true } },
+  { path: '/resultat/:quizId', name: 'ResultPage', component: ResultPage, meta: { requiresAuth: true } },
   { path: '/admin', component: AdminPage }
 ];
 

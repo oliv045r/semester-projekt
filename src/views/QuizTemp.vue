@@ -98,6 +98,7 @@ export default {
       if (user) {
         const question = this.currentQuestion;
         const isCorrect = question.answers[selectedAnswer].isCorrect;
+        const quizId = this.$route.params.quizId; // Get the quizId from the route parameters
 
         // Check if the answer already exists
         const q = query(
@@ -113,6 +114,7 @@ export default {
             selectedAnswer,
             isCorrect,
             timestamp: new Date(),
+            quizId // Include quizId in the document
           });
         } else {
           // Add a new document
@@ -121,6 +123,7 @@ export default {
             selectedAnswer,
             isCorrect,
             timestamp: new Date(),
+            quizId // Include quizId in the document
           });
         }
       }
@@ -133,7 +136,8 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
-        this.$router.push('/resultat');
+        const quizId = this.$route.params.quizId; // Get the quizId from the route parameters
+        this.$router.push({ name: 'ResultPage', params: { quizId } }); // Navigate to ResultPage with quizId
       }
     },
   },
