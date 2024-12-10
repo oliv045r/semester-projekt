@@ -26,6 +26,27 @@
         </router-link>
       </div>
     </div>
+    <div class="quiz-container">
+      <h3>Quiz dig selv</h3>
+      <p>Har du lært noget af at swipe? Test hvor meget du kan huske!</p>
+      <div class="btn-container quiz-swipe">
+        <router-link :to="{ name: 'Quiz', params: { level: 1 } }">
+          <button class="difficulty-btn dif-active">1</button>
+        </router-link>
+        <router-link :to="{ name: 'Quiz', params: { level: 2 } }">
+          <button class="difficulty-btn">2</button>
+        </router-link>
+        <router-link :to="{ name: 'Quiz', params: { level: 3 } }">
+          <button class="difficulty-btn">3</button>
+        </router-link>
+        <router-link :to="{ name: 'Quiz', params: { level: 4 } }">
+          <button class="difficulty-btn">4</button>
+        </router-link>
+        <router-link :to="{ name: 'Quiz', params: { level: 5 } }">
+          <button class="difficulty-btn">5</button>
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
 

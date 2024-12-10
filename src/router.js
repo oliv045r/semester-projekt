@@ -6,9 +6,13 @@ import RegisterUser from './views/RegisterUser.vue';
 import LogIn from './views/LogIn.vue';
 import DifficultySelect from './views/DifficultySelect.vue';
 import SwipeGame from './views/SwipeGame.vue';
-import ResultPage from './views/ResultPage.vue';
+import QuizGame from './views/QuizGame.vue';
+import SwipeResult from './views/SwipeResult.vue';
+import QuizResult from './views/QuizResult.vue';
+import ManageSwipe from './views/ManageSwipe.vue';
+import ManageQuiz from './views/ManageQuiz.vue';
 import AdminPanel from './views/AdminPanel.vue';
-import AddSwipe from './views/AddSwipe.vue';
+
 
 const routes = [
   { path: '/', component: StartPage },
@@ -16,9 +20,12 @@ const routes = [
   { path: '/log-ind', component: LogIn },
   { path: '/vælg-sværhedsgrad', component: DifficultySelect, meta: { requiresAuth: true } },
   { path: '/swipe/:level', name: 'Swipe', component: SwipeGame, meta: { requiresAuth: true } },
-  { path: '/resultat/:level', name: 'ResultPage', component: ResultPage, meta: { requiresAuth: true } },
+  { path: '/quiz/:level', name: 'Quiz', component: QuizGame, meta: { requiresAuth: true } },
+  { path: '/swipe-resultat/:level', name: 'SwipeResult', component: SwipeResult, meta: { requiresAuth: true } },
+  { path: '/quiz-resultat/:level', name: 'QuizResult', component: QuizResult, meta: { requiresAuth: true } },
+  { path: '/manage-swipe', component: ManageSwipe, meta: { requiresAuth: true } },
+  { path: '/manage-quiz', component: ManageQuiz, meta: { requiresAuth: true } },
   { path: '/admin', component: AdminPanel, meta: { requiresAuth: true } },
-  { path: '/add-swipe', component: AddSwipe, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
