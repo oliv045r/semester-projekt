@@ -68,11 +68,10 @@ export default {
         if (!user) {
           throw new Error("User is not authenticated");
         }
-        const quizId = `SwipeQuestions${this.level}`;
         const questionId = `q${Date.now()}`; // Generate a unique question ID
-        await setDoc(doc(db, `SwipeQuiz/${quizId}/questions`, questionId), {
+        await setDoc(doc(db, `SwipeQuestions`, questionId), {
           questionId: questionId,
-          quizId: quizId,
+          SwipeLevel: this.level.toString(), // Ensure SwipeLevel is stored as a string
           questionText: this.questionText,
           answers: this.answers
         });

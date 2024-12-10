@@ -44,7 +44,12 @@ export default {
 
       const answeredQuestions = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
         const data = docSnapshot.data();
-        const questionDoc = await getDoc(doc(db, `SwipeQuiz/${quizId}/questions`, data.questionId));
+        console.log("Fetching question with ID:", data.questionId); // Log the question ID
+        const questionDoc = await getDoc(doc(db, `SwipeQuestions`, data.questionId));
+        if (!questionDoc.exists()) {
+          console.error("Question document does not exist:", data.questionId);
+          return null;
+        }
         const questionData = questionDoc.data();
 
         return {
@@ -56,7 +61,7 @@ export default {
         };
       }));
 
-      this.answeredQuestions = answeredQuestions;
+      this.answeredQuestions = answeredQuestions.filter(q => q !== null); // Filter out null values
     } else {
       console.error("quizId is undefined");
     }

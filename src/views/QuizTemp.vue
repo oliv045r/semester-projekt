@@ -40,7 +40,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, addDoc, query, where, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, updateDoc } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
@@ -68,13 +68,15 @@ export default {
   async created() {
     try {
       const level = this.$route.params.level; // Assuming level is passed as a route parameter
-      const quizId = `SwipeQuestions${level}`;
-      const q = query(collection(db, `SwipeQuiz/${quizId}/questions`));
+      console.log("Fetching questions for level:", level); // Log the level
+      const q = query(collection(db, `SwipeQuestions`), where("SwipeLevel", "==", level.toString())); // Query as string
+      console.log("Query:", q); // Log the query
       const querySnapshot = await getDocs(q);
       this.questions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
+      console.log("Fetched questions:", this.questions); // Log the fetched questions
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
