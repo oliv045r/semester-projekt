@@ -1,0 +1,71 @@
+quizzes (Collection)
+ ├── quiz1 (Document)
+ |     ├── quizId: "quiz1"
+ |     ├── quizType: "50/50"      // Enten "50/50" eller "Quiz"
+ |     └── level: 1              // Niveau for quizzen
+ |
+ └── quiz2 (Document)
+       ├── quizId: "quiz2"
+       ├── quizType: "Quiz"
+       └── level: 1
+
+questions (Collection)
+ ├── q1 (Document)
+ |     ├── questionId: "q1"
+ |     ├── quizId: "quiz1"
+ |     ├── questionText: "Vil du vælge 4K eller HD?"
+ |     └── answers: [
+ |           { "text": "Jeg skal se den i 4k!", "feedback": "Hvis du vælger 4K...", "isCorrect": false },
+ |           { "text": "Jeg ændrer kvaliteten til HD", "feedback": "Ved at vælge HD...", "isCorrect": true }
+ |         ]
+ |
+ ├── q2 (Document)
+ |     ├── questionId: "q2"
+ |     ├── quizId: "quiz1"
+ |     ├── questionText: "Skal du vælge batteridrift eller strøm?"
+ |     └── answers: [
+ |           { "text": "Batteridrift", "feedback": "Batterier kan være praktiske...", "isCorrect": false },
+ |           { "text": "Strøm", "feedback": "Strømforbrug er mere energieffektivt...", "isCorrect": true }
+ |         ]
+ |
+ └── q3 (Document)
+       ├── questionId: "q3"
+       ├── quizId: "quiz2"
+       ├── questionText: "Hvilken løsning er mest energieffektiv?"
+       └── answers: [
+             { "text": "Mulighed A", "feedback": "Denne løsning er mere effektiv...", "isCorrect": false },
+             { "text": "Mulighed B", "feedback": "Godt valg! Du sparer energi...", "isCorrect": true }
+           ]
+
+
+users (Collection)
+ ├── user123 (Document)
+ |     ├── userId: "user123"
+ |     ├── currentLevel: 1         // Brugerens aktuelle niveau
+ |     └── progress (Subcollection)
+ |           ├── quiz1 (Document)
+ |           |     ├── q1: { "selectedAnswer": 1, "isCorrect": true }
+ |           |     └── q2: { "selectedAnswer": 0, "isCorrect": true }
+ |           └── quiz2 (Document)
+ |                 ├── q3: { "selectedAnswer": 2, "isCorrect": false }
+ |
+ └── user124 (Document)
+       ├── userId: "user124"
+       ├── currentLevel: 2
+       └── progress (Subcollection)
+             ├── quiz1 (Document)
+             |     └── q1: { "selectedAnswer": 0, "isCorrect": false }
+             └── quiz2 (Document)
+                   ├── q3: { "selectedAnswer": 1, "isCorrect": true }
+
+quizTypes (Collection)
+ ├── 50-50 (Document)
+ |     ├── typeId: "50-50"
+ |     ├── hasFeedback: true
+ |     └── maxAnswers: 2
+ |
+ └── Quiz (Document)
+       ├── typeId: "Quiz"
+       ├── hasFeedback: false
+       └── maxAnswers: 4
+

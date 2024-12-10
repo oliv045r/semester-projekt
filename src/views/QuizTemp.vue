@@ -2,8 +2,7 @@
   <div class="quiz-container" v-if="questions.length > 0">
     <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <h2>{{ currentQuestion.heading }}</h2>
-      <p>{{ currentQuestion.question }}</p>
+      <h2>{{ currentQuestion.questionText }}</h2>
     </div>
     <div class="answers">
       <div
@@ -11,26 +10,26 @@
         v-gesture="handleSwipe"
         :class="{ swiped: swipedLeft }"
       >
-        {{ currentQuestion.answers[0] }}
+        {{ currentQuestion.answers[0].text }}
       </div>
       <div
         class="answer right"
         v-gesture="handleSwipe"
         :class="{ swiped: swipedRight }"
       >
-        {{ currentQuestion.answers[1] }}
+        {{ currentQuestion.answers[1].text }}
       </div>
     </div>
     <FeedbackLeft
       :isVisible="showFeedbackLeft"
-      :feedbackHeading="currentQuestion.feedbackHeading[0]"
-      :feedbackDesc="currentQuestion.feedbackDesc[0]"
+      :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
+      :feedbackDesc="currentQuestion.answers[0].feedback"
       @next="nextQuestion"
     />
     <FeedbackRight
       :isVisible="showFeedbackRight"
-      :feedbackHeading="currentQuestion.feedbackHeading[1]"
-      :feedbackDesc="currentQuestion.feedbackDesc[1]"
+      :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
+      :feedbackDesc="currentQuestion.answers[1].feedback"
       @next="nextQuestion"
     />
   </div>
@@ -41,7 +40,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, updateDoc } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 
@@ -68,11 +67,16 @@ export default {
   },
   async created() {
     try {
-      const querySnapshot = await getDocs(collection(db, "questions"));
+      const level = this.$route.params.level; // Assuming level is passed as a route parameter
+      console.log("Fetching questions for level:", level); // Log the level
+      const q = query(collection(db, `SwipeQuestions`), where("SwipeLevel", "==", level.toString())); // Query as string
+      console.log("Query:", q); // Log the query
+      const querySnapshot = await getDocs(q);
       this.questions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
+      console.log("Fetched questions:", this.questions); // Log the fetched questions
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
@@ -95,12 +99,37 @@ export default {
     async logAnswer(selectedAnswer) {
       const user = auth.currentUser;
       if (user) {
-        await addDoc(collection(db, "userAnswers"), {
-          userId: user.uid,
-          questionId: this.currentQuestion.id,
-          selectedAnswer,
-          timestamp: new Date(),
-        });
+        const question = this.currentQuestion;
+        const isCorrect = question.answers[selectedAnswer].isCorrect;
+        const level = this.$route.params.level; // Get the level from the route parameters
+        const quizId = `SwipeQuestions${level}`;
+
+        // Check if the answer already exists
+        const q = query(
+          collection(db, `users/${user.uid}/progress`),
+          where("questionId", "==", question.id)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          // Update the existing document
+          const docRef = querySnapshot.docs[0].ref;
+          await updateDoc(docRef, {
+            selectedAnswer,
+            isCorrect,
+            timestamp: new Date(),
+            quizId // Include quizId in the document
+          });
+        } else {
+          // Add a new document
+          await addDoc(collection(db, `users/${user.uid}/progress`), {
+            questionId: question.id,
+            selectedAnswer,
+            isCorrect,
+            timestamp: new Date(),
+            quizId // Include quizId in the document
+          });
+        }
       }
     },
     nextQuestion() {
@@ -111,7 +140,8 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
-        this.$router.push('/resultat');
+        const level = this.$route.params.level; // Get the level from the route parameters
+        this.$router.push({ name: 'ResultPage', params: { level } }); // Navigate to ResultPage with level
       }
     },
   },
@@ -141,15 +171,6 @@ export default {
   text-align: left;
 }
 
-.question h2 {
-  font-size: 20px;
-}
-
-.question p {
-  font-size: 18px;
-  margin: 0.5rem 0;
-
-}
 .answers {
   display: flex;
   flex-direction: column;
