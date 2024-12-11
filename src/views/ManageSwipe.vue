@@ -1,8 +1,8 @@
 <template>
   <div class="admin-container">
-    <h2>Manage Swipe Questions</h2>
+    <h2>Administrer Swipe spørgsmål</h2>
     <div class="level-selector">
-      <label for="level">Select Level:</label>
+      <label for="level">Vælg level:</label>
       <select v-model="selectedLevel" @change="fetchQuestions" required>
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
@@ -15,20 +15,20 @@
       {{ showAddForm ? 'Cancel' : 'Add Swipe Question' }}
     </button>
     <div v-if="showAddForm" class="add-question-container">
-      <h3>Add Swipe Question</h3>
+      <h3>Tilføj Swipe spørgsmål</h3>
       <form @submit.prevent="addQuestion">
         <div class="form-group">
-          <label for="questionText">Question Text:</label>
+          <label for="questionText">Spørgsmålstekst:</label>
           <input type="text" id="questionText" v-model="newQuestion.questionText" required />
         </div>
         <div class="answer-section">
-          <h4>Answer 1</h4>
+          <h4>Svar 1</h4>
           <div class="form-group">
-            <label for="answer1">Text:</label>
+            <label for="answer1">Tekst:</label>
             <input type="text" id="answer1" v-model="newQuestion.answers[0].text" required />
           </div>
           <div class="form-group">
-            <label for="feedbackHeading1">Feedback Heading:</label>
+            <label for="feedbackHeading1">Feedback overskrift:</label>
             <input
               type="text"
               id="feedbackHeading1"
@@ -41,18 +41,18 @@
             <textarea id="feedback1" v-model="newQuestion.answers[0].feedback" rows="2" required></textarea>
           </div>
           <div class="form-group checkbox-group">
-            <label for="isCorrect1">Is Correct:</label>
+            <label for="isCorrect1">Er korrekt:</label>
             <input type="checkbox" id="isCorrect1" v-model="newQuestion.answers[0].isCorrect" />
           </div>
         </div>
         <div class="answer-section">
-          <h4>Answer 2</h4>
+          <h4>Svar 2</h4>
           <div class="form-group">
-            <label for="answer2">Text:</label>
+            <label for="answer2">Tekst:</label>
             <input type="text" id="answer2" v-model="newQuestion.answers[1].text" required />
           </div>
           <div class="form-group">
-            <label for="feedbackHeading2">Feedback Heading:</label>
+            <label for="feedbackHeading2">Feedback overskrift:</label>
             <input
               type="text"
               id="feedbackHeading2"
@@ -65,7 +65,7 @@
             <textarea id="feedback2" v-model="newQuestion.answers[1].feedback" rows="2" required></textarea>
           </div>
           <div class="form-group checkbox-group">
-            <label for="isCorrect2">Is Correct:</label>
+            <label for="isCorrect2">Er korrekt:</label>
             <input type="checkbox" id="isCorrect2" v-model="newQuestion.answers[1].isCorrect" />
           </div>
         </div>
@@ -73,7 +73,7 @@
       </form>
     </div>
     <div v-else>
-      <h3>Questions for Level {{ selectedLevel }}</h3>
+      <h3>Spørgsmål til level {{ selectedLevel }}</h3>
       <div v-if="questions.length > 0">
         <div
           v-for="(question, index) in questions"
@@ -87,17 +87,17 @@
           <div v-if="activeIndex === index" class="accordion-content">
             <form @submit.prevent="updateQuestion(question.id)">
               <div class="form-group">
-                <label for="questionText">Question Text:</label>
+                <label for="questionText">Spørgsmålstekst:</label>
                 <input type="text" v-model="question.questionText" required />
               </div>
               <div class="answer-section">
-                <h4>Answer 1</h4>
+                <h4>Svar 1</h4>
                 <div class="form-group">
-                  <label for="answer1">Text:</label>
+                  <label for="answer1">Tekst:</label>
                   <input type="text" v-model="question.answers[0].text" required />
                 </div>
                 <div class="form-group">
-                  <label for="feedbackHeading1">Feedback Heading:</label>
+                  <label for="feedbackHeading1">Feedback overskrift:</label>
                   <input
                     type="text"
                     v-model="question.answers[0].feedbackHeading"
@@ -113,18 +113,18 @@
                   ></textarea>
                 </div>
                 <div class="form-group checkbox-group">
-                  <label for="isCorrect1">Is Correct:</label>
+                  <label for="isCorrect1">Er korrekt:</label>
                   <input type="checkbox" v-model="question.answers[0].isCorrect" />
                 </div>
               </div>
               <div class="answer-section">
-                <h4>Answer 2</h4>
+                <h4>Svar 2</h4>
                 <div class="form-group">
-                  <label for="answer2">Text:</label>
+                  <label for="answer2">Tekst:</label>
                   <input type="text" v-model="question.answers[1].text" required />
                 </div>
                 <div class="form-group">
-                  <label for="feedbackHeading2">Feedback Heading:</label>
+                  <label for="feedbackHeading2">Feedback overskrift:</label>
                   <input
                     type="text"
                     v-model="question.answers[1].feedbackHeading"
@@ -140,18 +140,18 @@
                   ></textarea>
                 </div>
                 <div class="form-group checkbox-group">
-                  <label for="isCorrect2">Is Correct:</label>
+                  <label for="isCorrect2">Er korrekt:</label>
                   <input type="checkbox" v-model="question.answers[1].isCorrect" />
                 </div>
               </div>
               <div class="button-group">
-                <button type="submit" class="update-button">Update Question</button>
+                <button type="submit" class="update-button">Opdater spørgsmål</button>
                 <button
                   type="button"
                   class="delete-button"
                   @click="deleteQuestion(question.id)"
                 >
-                  Delete Question
+                  Slet spørgsmål
                 </button>
               </div>
             </form>
@@ -159,7 +159,7 @@
         </div>
       </div>
       <div v-else>
-        <p>No questions found for this level.</p>
+        <p>Ingen spørgsmål fundet til dette level</p>
       </div>
     </div>
   </div>
@@ -274,9 +274,10 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 20px;
+  width: 100%; /* Ensure full width for the container */
   height: 100vh;
   overflow-y: auto;
-  box-sizing: border-box; /* Include padding in the height calculation */
+  box-sizing: border-box;
 }
 
 h2, h3 {
