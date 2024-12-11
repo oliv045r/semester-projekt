@@ -1,8 +1,8 @@
 <template>
   <div class="admin-container">
-    <h2>Manage Quiz Questions</h2>
+    <h2>Administrer Quizspørgsmål</h2>
     <div class="level-selector">
-      <label for="level">Select Level:</label>
+      <label for="level">Vælg level:</label>
       <select v-model="selectedLevel" @change="fetchQuestions" required>
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
@@ -11,27 +11,32 @@
         <option value="5">Level 5</option>
       </select>
     </div>
-    <button @click="showAddForm = !showAddForm">{{ showAddForm ? 'Cancel' : 'Add Quiz Question' }}</button>
-    <div v-if="showAddForm">
-      <h3>Add Quiz Question</h3>
+    <button @click="showAddForm = !showAddForm" class="add-button">
+      {{ showAddForm ? 'Annuller' : 'Tilføj Quizspørgsmål' }}
+    </button>
+    <div v-if="showAddForm" class="add-question-container">
+      <h3>Tilføj Quizspørgsmål</h3>
       <form @submit.prevent="addQuestion">
-        <div>
-          <label for="questionText">Question Text:</label>
-          <input type="text" v-model="newQuestion.questionText" required />
+        <div class="form-group">
+          <label for="questionText">Spørgsmålstekst:</label>
+          <input type="text" id="questionText" v-model="newQuestion.questionText" required />
         </div>
-        <div v-for="(answer, index) in newQuestion.answers" :key="index">
-          <label :for="'answer' + index">Answer {{ index + 1 }}:</label>
-          <input :id="'answer' + index" type="text" v-model="answer.text" required />
-          <div class="input-container">
-            <label :for="'isCorrect' + index">Is Correct:</label>
+        <div class="answer-section" v-for="(answer, index) in newQuestion.answers" :key="index">
+          <h4>Svar {{ index + 1 }}</h4>
+          <div class="form-group">
+            <label :for="'answer' + index">Tekst:</label>
+            <input :id="'answer' + index" type="text" v-model="answer.text" required />
+          </div>
+          <div class="form-group checkbox-group">
+            <label :for="'isCorrect' + index">Er Korrekt:</label>
             <input :id="'isCorrect' + index" type="checkbox" v-model="answer.isCorrect" />
           </div>
         </div>
-        <button type="submit">Add Question</button>
+        <button type="submit" class="add-button">Tilføj Spørgsmål</button>
       </form>
     </div>
     <div v-else>
-      <h3>Questions for Level {{ selectedLevel }}</h3>
+      <h3>Spørgsmål for Niveau {{ selectedLevel }}</h3>
       <div v-if="questions.length > 0">
         <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
           <div class="accordion-header" @click="toggleAccordion(index)">
@@ -40,26 +45,41 @@
           </div>
           <div v-if="activeIndex === index" class="accordion-content">
             <form @submit.prevent="updateQuestion(question.id)">
-              <div>
-                <label for="questionText">Question Text:</label>
+              <div class="form-group">
+                <label for="questionText">Spørgsmålstekst:</label>
                 <input type="text" v-model="question.questionText" required />
               </div>
-              <div v-for="(answer, index) in question.answers" :key="index">
-                <label :for="'answer' + index">Answer {{ index + 1 }}:</label>
-                <input :id="'answer' + index" type="text" v-model="answer.text" required />
-                <div class="input-container">
-                  <label :for="'isCorrect' + index">Is Correct:</label>
+              <div
+                class="answer-section"
+                v-for="(answer, index) in question.answers"
+                :key="index"
+              >
+                <h4>Svar {{ index + 1 }}</h4>
+                <div class="form-group">
+                  <label :for="'answer' + index">Tekst:</label>
+                  <input :id="'answer' + index" type="text" v-model="answer.text" required />
+                </div>
+                <div class="form-group checkbox-group">
+                  <label :for="'isCorrect' + index">Er Korrekt:</label>
                   <input :id="'isCorrect' + index" type="checkbox" v-model="answer.isCorrect" />
                 </div>
               </div>
-              <button type="submit">Update Question</button>
-              <button type="button" @click="deleteQuestion(question.id)">Delete Question</button>
+              <div class="button-group">
+                <button type="submit" class="update-button">Opdater Spørgsmål</button>
+                <button
+                  type="button"
+                  class="delete-button"
+                  @click="deleteQuestion(question.id)"
+                >
+                  Slet Spørgsmål
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
       <div v-else>
-        <p>No questions found for this level.</p>
+        <p>Ingen spørgsmål fundet for dette niveau.</p>
       </div>
     </div>
   </div>
@@ -152,69 +172,204 @@ export default {
 </script>
 
 <style scoped>
+/* General Styles */
+:root {
+  --main-color: #2D8BD9; /* Primary blue */
+  --secondary-color: #1A6CAB; /* Darker blue for hover */
+  --accent-color: #FFFFFF; /* White for form background */
+  --highlight-color: #F35D0C; /* Orange for emphasis */
+  --text-color: #323232; /* Dark gray for text */
+  --background-color: #000000; /* Black for page background */
+  --input-border-color: #CCCCCC; /* Light gray for input borders */
+  --input-focus-color: #2D8BD9; /* Blue for focused input border */
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
 .admin-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+h2, h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-top: 0; /* Ensure the heading starts within the container */
+  padding-top: 50px; /* Add some padding to give space around it */
+  color: var(--main-color);
+  text-align: center;
+  font-size: 1.8em; /* Ensure readability on smaller screens */
 }
 
 .level-selector {
   margin-bottom: 20px;
 }
 
-form {
+select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--input-border-color);
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+select:focus {
+  border-color: var(--input-focus-color);
+  outline: none;
+}
+
+.add-question-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--accent-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.add-question-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  margin-bottom: 15px;
 }
 
-label {
+.form-group label {
   font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--text-color);
 }
 
-.input-container {
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: var(--input-focus-color);
+  outline: none;
+}
+
+.checkbox-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-input, select {
-  padding: 5px;
+.answer-section {
+  border-top: 1px solid var(--input-border-color);
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.answer-section h4 {
+  color: var(--main-color);
   margin-bottom: 10px;
 }
 
+/* Buttons */
 button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   background-color: var(--main-color);
-  color: white;
+  color: var(--accent-color);
   border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background-color: var(--secondary-color);
+  transform: scale(1.05);
+}
+
+.add-button {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.update-button {
+  background-color: var(--main-color);
+}
+
+.delete-button {
+  background-color: #d9534f;
 }
 
 .accordion-item {
-  width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 1rem;
+  width: 95vw; /* Full width of the viewport */
+  margin: 0 auto 10px; /* Center align with vertical spacing */
+  border: 1px solid var(--input-border-color);
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  color: var(--accent-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Prevent content overflow */
+  margin-left: 8px;
 }
 
 .accordion-header {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  align-items: left;
+  padding: 15px;
   cursor: pointer;
-  background-color: #323232;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--accent-color);
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+  background-color: var(--secondary-color);
 }
 
 .accordion-content {
-  padding: 1rem;
-  background-color: #444;
-  color: white;
+  padding: 15px;
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border-top: 1px solid var(--input-border-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

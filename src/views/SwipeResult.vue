@@ -1,23 +1,23 @@
 <template>
   <div class="results-container">
-    <h2>Quiz Completed</h2>
-    <p>Congratulations! You have completed the quiz.</p>
+    <h2>Quiz Fuldført</h2>
+    <p class="congratulations-message">Tillykke! Du har gennemført quizzen.</p>
     <div v-if="answeredQuestions.length > 0">
       <div v-for="(question, index) in answeredQuestions" :key="index" class="accordion-item">
         <div class="accordion-header" @click="toggleAccordion(index)">
-          <h3>{{ question.questionText }}</h3>
+          <h3 class="question-text">{{ question.questionText }}</h3>
           <span :class="{'correct': question.isCorrect, 'wrong': !question.isCorrect}">
-            {{ question.isCorrect ? '✔️' : '❌' }}
+            {{ question.isCorrect ? '✔' : '✖' }}
           </span>
         </div>
         <div v-if="activeIndex === index" class="accordion-content">
-          <p><strong>Selected Answer:</strong> {{ question.selectedAnswerText }}</p>
-          <p><strong>Feedback Heading:</strong> {{ question.feedbackHeading }}</p>
+          <p><strong>Valgt svar:</strong> {{ question.selectedAnswerText }}</p>
+          <p><strong>Feedback overskrift:</strong> {{ question.feedbackHeading }}</p>
           <p><strong>Feedback:</strong> {{ question.feedback }}</p>
         </div>
       </div>
     </div>
-    <button @click="goToHome">Go to Home</button>
+    <button @click="goToHome" class="home-button">Gå til Hjem</button>
   </div>
 </template>
 
@@ -42,28 +42,26 @@ export default {
       const q = query(progressRef, where("quizId", "==", quizId));
       const querySnapshot = await getDocs(q);
 
-      const answeredQuestions = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
-        const data = docSnapshot.data();
-        console.log("Fetching question with ID:", data.questionId); // Log the question ID
-        const questionDoc = await getDoc(doc(db, `SwipeQuestions`, data.questionId));
-        if (!questionDoc.exists()) {
-          console.error("Question document does not exist:", data.questionId);
-          return null;
-        }
-        const questionData = questionDoc.data();
+      const answeredQuestions = await Promise.all(
+        querySnapshot.docs.map(async (docSnapshot) => {
+          const data = docSnapshot.data();
+          const questionDoc = await getDoc(doc(db, `SwipeQuestions`, data.questionId));
+          if (!questionDoc.exists()) {
+            return null;
+          }
+          const questionData = questionDoc.data();
 
-        return {
-          questionText: questionData.questionText,
-          selectedAnswerText: questionData.answers[data.selectedAnswer].text,
-          feedbackHeading: questionData.answers[data.selectedAnswer].feedbackHeading,
-          feedback: questionData.answers[data.selectedAnswer].feedback,
-          isCorrect: data.isCorrect,
-        };
-      }));
+          return {
+            questionText: questionData.questionText,
+            selectedAnswerText: questionData.answers[data.selectedAnswer].text,
+            feedbackHeading: questionData.answers[data.selectedAnswer].feedbackHeading,
+            feedback: questionData.answers[data.selectedAnswer].feedback,
+            isCorrect: data.isCorrect,
+          };
+        })
+      );
 
-      this.answeredQuestions = answeredQuestions.filter(q => q !== null); // Filter out null values
-    } else {
-      console.error("quizId is undefined");
+      this.answeredQuestions = answeredQuestions.filter((q) => q !== null);
     }
   },
   methods: {
@@ -81,36 +79,103 @@ export default {
 .results-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.results-container h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #2d8bd9;
+}
+
+.congratulations-message {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
 }
 
 .accordion-item {
   width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .accordion-header {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  align-items: center;
+  padding: 10px 15px;
   cursor: pointer;
-  background-color: #323232;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+  background-color: #F35D0C;
 }
 
 .accordion-content {
-  padding: 1rem;
-  background-color: #323232;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: left;
 }
 
 .correct {
-  color: green;
+  color: #28a745;
 }
 
 .wrong {
-  color: red;
+  color: #dc3545;
+}
+
+.home-button {
+  align-self: flex-start;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: white;
+  background-color: #2d8bd9;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.question-text {
+  text-align: left;
+}
+
+.home-button:hover {
+  background-color: #1a6cab;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .results-container {
+    padding: 15px;
+  }
+
+  .results-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .congratulations-message {
+    font-size: 1rem;
+  }
+
+  .home-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
 }
 </style>
