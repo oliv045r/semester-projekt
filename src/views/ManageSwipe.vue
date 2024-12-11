@@ -11,81 +11,149 @@
         <option value="5">Level 5</option>
       </select>
     </div>
-    <button @click="showAddForm = !showAddForm">{{ showAddForm ? 'Cancel' : 'Add Swipe Question' }}</button>
-    <div v-if="showAddForm">
+    <button @click="showAddForm = !showAddForm" class="add-button">
+      {{ showAddForm ? 'Cancel' : 'Add Swipe Question' }}
+    </button>
+    <div v-if="showAddForm" class="add-question-container">
       <h3>Add Swipe Question</h3>
       <form @submit.prevent="addQuestion">
-        <div>
+        <div class="form-group">
           <label for="questionText">Question Text:</label>
-          <input type="text" v-model="newQuestion.questionText" required />
+          <input type="text" id="questionText" v-model="newQuestion.questionText" required />
         </div>
-        <div>
-          <label for="answer1">Answer 1:</label>
-          <input type="text" v-model="newQuestion.answers[0].text" required />
-          <label for="feedbackHeading1">Feedback Heading 1:</label>
-          <input type="text" v-model="newQuestion.answers[0].feedbackHeading" required />
-          <label for="feedback1">Feedback 1:</label>
-          <input type="text" v-model="newQuestion.answers[0].feedback" required />
-          <div class="input-container">
+        <div class="answer-section">
+          <h4>Answer 1</h4>
+          <div class="form-group">
+            <label for="answer1">Text:</label>
+            <input type="text" id="answer1" v-model="newQuestion.answers[0].text" required />
+          </div>
+          <div class="form-group">
+            <label for="feedbackHeading1">Feedback Heading:</label>
+            <input
+              type="text"
+              id="feedbackHeading1"
+              v-model="newQuestion.answers[0].feedbackHeading"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="feedback1">Feedback:</label>
+            <textarea id="feedback1" v-model="newQuestion.answers[0].feedback" rows="2" required></textarea>
+          </div>
+          <div class="form-group checkbox-group">
             <label for="isCorrect1">Is Correct:</label>
-            <input type="checkbox" v-model="newQuestion.answers[0].isCorrect" />
+            <input type="checkbox" id="isCorrect1" v-model="newQuestion.answers[0].isCorrect" />
           </div>
         </div>
-        <div>
-          <label for="answer2">Answer 2:</label>
-          <input type="text" v-model="newQuestion.answers[1].text" required />
-          <label for="feedbackHeading2">Feedback Heading 2:</label>
-          <input type="text" v-model="newQuestion.answers[1].feedbackHeading" required />
-          <label for="feedback2">Feedback 2:</label>
-          <input type="text" v-model="newQuestion.answers[1].feedback" required />
-          <div class="input-container">
+        <div class="answer-section">
+          <h4>Answer 2</h4>
+          <div class="form-group">
+            <label for="answer2">Text:</label>
+            <input type="text" id="answer2" v-model="newQuestion.answers[1].text" required />
+          </div>
+          <div class="form-group">
+            <label for="feedbackHeading2">Feedback Heading:</label>
+            <input
+              type="text"
+              id="feedbackHeading2"
+              v-model="newQuestion.answers[1].feedbackHeading"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="feedback2">Feedback:</label>
+            <textarea id="feedback2" v-model="newQuestion.answers[1].feedback" rows="2" required></textarea>
+          </div>
+          <div class="form-group checkbox-group">
             <label for="isCorrect2">Is Correct:</label>
-            <input type="checkbox" v-model="newQuestion.answers[1].isCorrect" />
+            <input type="checkbox" id="isCorrect2" v-model="newQuestion.answers[1].isCorrect" />
           </div>
         </div>
-        <button type="submit">Add Question</button>
+        <button type="submit" class="add-button">Add Question</button>
       </form>
     </div>
     <div v-else>
       <h3>Questions for Level {{ selectedLevel }}</h3>
       <div v-if="questions.length > 0">
-        <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
+        <div
+          v-for="(question, index) in questions"
+          :key="question.id"
+          class="accordion-item"
+        >
           <div class="accordion-header" @click="toggleAccordion(index)">
             <h3>{{ question.questionText }}</h3>
             <span>{{ activeIndex === index ? '-' : '+' }}</span>
           </div>
           <div v-if="activeIndex === index" class="accordion-content">
             <form @submit.prevent="updateQuestion(question.id)">
-              <div>
+              <div class="form-group">
                 <label for="questionText">Question Text:</label>
                 <input type="text" v-model="question.questionText" required />
               </div>
-              <div>
-                <label for="answer1">Answer 1:</label>
-                <input type="text" v-model="question.answers[0].text" required />
-                <label for="feedbackHeading1">Feedback Heading 1:</label>
-                <input type="text" v-model="question.answers[0].feedbackHeading" required />
-                <label for="feedback1">Feedback 1:</label>
-                <input type="text" v-model="question.answers[0].feedback" required />
-                <div class="input-container">
+              <div class="answer-section">
+                <h4>Answer 1</h4>
+                <div class="form-group">
+                  <label for="answer1">Text:</label>
+                  <input type="text" v-model="question.answers[0].text" required />
+                </div>
+                <div class="form-group">
+                  <label for="feedbackHeading1">Feedback Heading:</label>
+                  <input
+                    type="text"
+                    v-model="question.answers[0].feedbackHeading"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="feedback1">Feedback:</label>
+                  <textarea
+                    v-model="question.answers[0].feedback"
+                    rows="2"
+                    required
+                  ></textarea>
+                </div>
+                <div class="form-group checkbox-group">
                   <label for="isCorrect1">Is Correct:</label>
                   <input type="checkbox" v-model="question.answers[0].isCorrect" />
                 </div>
               </div>
-              <div>
-                <label for="answer2">Answer 2:</label>
-                <input type="text" v-model="question.answers[1].text" required />
-                <label for="feedbackHeading2">Feedback Heading 2:</label>
-                <input type="text" v-model="question.answers[1].feedbackHeading" required />
-                <label for="feedback2">Feedback 2:</label>
-                <input type="text" v-model="question.answers[1].feedback" required />
-                <div class="input-container">
+              <div class="answer-section">
+                <h4>Answer 2</h4>
+                <div class="form-group">
+                  <label for="answer2">Text:</label>
+                  <input type="text" v-model="question.answers[1].text" required />
+                </div>
+                <div class="form-group">
+                  <label for="feedbackHeading2">Feedback Heading:</label>
+                  <input
+                    type="text"
+                    v-model="question.answers[1].feedbackHeading"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="feedback2">Feedback:</label>
+                  <textarea
+                    v-model="question.answers[1].feedback"
+                    rows="2"
+                    required
+                  ></textarea>
+                </div>
+                <div class="form-group checkbox-group">
                   <label for="isCorrect2">Is Correct:</label>
                   <input type="checkbox" v-model="question.answers[1].isCorrect" />
                 </div>
               </div>
-              <button type="submit">Update Question</button>
-              <button type="button" @click="deleteQuestion(question.id)">Delete Question</button>
+              <div class="button-group">
+                <button type="submit" class="update-button">Update Question</button>
+                <button
+                  type="button"
+                  class="delete-button"
+                  @click="deleteQuestion(question.id)"
+                >
+                  Delete Question
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -96,6 +164,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { db } from "@/firebase/firebaseConfig";
@@ -180,69 +249,217 @@ export default {
 </script>
 
 <style scoped>
+/* General Styles */
+:root {
+  --main-color: #2D8BD9; /* Primary blue */
+  --secondary-color: #1A6CAB; /* Darker blue for hover */
+  --accent-color: #FFFFFF; /* White for form background */
+  --highlight-color: #F35D0C; /* Orange for emphasis */
+  --text-color: #323232; /* Dark gray for text */
+  --background-color: #000000; /* Black for page background */
+  --input-border-color: #CCCCCC; /* Light gray for input borders */
+  --input-focus-color: #2D8BD9; /* Blue for focused input border */
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
 .admin-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box; /* Include padding in the height calculation */
+}
+
+h2, h3 {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-top: 0; /* Ensure the heading starts within the container */
+  padding-top: 50px; /* Add some padding to give space around it */
+  color: var(--main-color);
+  text-align: center;
+  font-size: 1.8em; /* Ensure readability on smaller screens */
 }
 
 .level-selector {
   margin-bottom: 20px;
 }
 
-form {
+select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--input-border-color);
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+select:focus {
+  border-color: var(--input-focus-color);
+  outline: none;
+}
+
+/* Add Question Form */
+.add-question-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--accent-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.add-question-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  margin-bottom: 15px;
 }
 
-label {
+.form-group label {
   font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--text-color);
 }
 
-.input-container {
+input[type="text"], textarea {
+  padding: 10px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+textarea {
+  resize: none;
+}
+
+input[type="text"]:focus, textarea:focus {
+  border-color: var(--input-focus-color);
+  outline: none;
+}
+
+.checkbox-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-input, select {
-  padding: 5px;
+.answer-section {
+  border-top: 1px solid var(--input-border-color);
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.answer-section h4 {
+  color: var(--main-color);
   margin-bottom: 10px;
 }
 
+/* Buttons */
 button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   background-color: var(--main-color);
-  color: white;
+  color: var(--accent-color);
   border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
 }
 
 button:hover {
   background-color: var(--secondary-color);
+  transform: scale(1.05);
 }
 
+.add-button {
+  width: 100%;
+  margin: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.update-button {
+  background-color: var(--main-color);
+}
+
+.update-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.delete-button {
+  background-color: #d9534f; /* Red for delete button */
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+}
+
+/* Accordion Styles */
 .accordion-item {
   width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 1rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .accordion-header {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  align-items: left;
+  padding: 15px;
   cursor: pointer;
-  background-color: #323232;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--accent-color);
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+  background-color: var(--secondary-color);
 }
 
 .accordion-content {
-  padding: 1rem;
-  background-color: #444;
-  color: white;
+  padding: 15px;
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border-top: 1px solid var(--input-border-color);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
+
