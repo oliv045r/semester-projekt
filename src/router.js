@@ -11,6 +11,8 @@ import SwipeResult from './views/SwipeResult.vue';
 import QuizResult from './views/QuizResult.vue';
 import ManageSwipe from './views/ManageSwipe.vue';
 import ManageQuiz from './views/ManageQuiz.vue';
+import UserManagement from './views/UserManagement.vue';
+
 import AdminPanel from './views/AdminPanel.vue';
 
 
@@ -23,8 +25,9 @@ const routes = [
   { path: '/quiz/:level', name: 'Quiz', component: QuizGame, meta: { requiresAuth: true } },
   { path: '/swipe-resultat/:level', name: 'SwipeResult', component: SwipeResult, meta: { requiresAuth: true } },
   { path: '/quiz-resultat/:level', name: 'QuizResult', component: QuizResult, meta: { requiresAuth: true } },
-  { path: '/manage-swipe', component: ManageSwipe, meta: { requiresAuth: true } },
-  { path: '/manage-quiz', component: ManageQuiz, meta: { requiresAuth: true } },
+  { path: '/administrer-swipe', component: ManageSwipe, meta: { requiresAuth: true } },
+  { path: '/administrer-quiz', component: ManageQuiz, meta: { requiresAuth: true } },
+  { path: '/administrer-brugere', component: UserManagement, meta: { requiresAuth: true } },
   { path: '/admin', component: AdminPanel, meta: { requiresAuth: true } },
 ];
 
@@ -34,7 +37,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log('Navigation Guard:', auth.currentUser); // Debugging line
   if (to.meta.requiresAuth && !auth.currentUser) {
     next('/log-ind');
   } else {

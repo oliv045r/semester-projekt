@@ -71,7 +71,7 @@ export default {
       this.activeIndex = this.activeIndex === index ? null : index;
     },
     goToHome() {
-      this.$router.push('/');
+      this.$router.push('/vælg-sværhedsgrad');
     }
   }
 };

@@ -2,6 +2,7 @@
   <AuthForm
     title="Opret bruger"
     buttonText="Opret"
+    :showUsername="true"
     @submit="register"
   />
   <p>Har du allerede en bruger? <router-link style="color: var(--text-color);" to="/log-ind"><strong>Log ind her</strong></router-link></p>
@@ -19,7 +20,7 @@ export default {
     AuthForm
   },
   methods: {
-    async register({ email, password }) {
+    async register({ email, password, username }) {
       const auth = getAuth();
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -32,6 +33,8 @@ export default {
             // Opret et dokument i users-samlingen
             await setDoc(doc(db, "users", authenticatedUser.uid), {
               userId: authenticatedUser.uid,
+              email: authenticatedUser.email,
+              username: username,
               currentLevel: 1
             });
 

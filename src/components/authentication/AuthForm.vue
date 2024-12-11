@@ -8,6 +8,9 @@
       <div>
         <input placeholder="Adgangskode" type="password" v-model="password" required />
       </div>
+      <div v-if="showUsername">
+        <input placeholder="Brugernavn" type="text" v-model="username" required />
+      </div>
       <div class="stay-logged" v-if="showStayLoggedIn">
         <input type="checkbox" v-model="stayLoggedIn" />
         <label>
@@ -34,18 +37,23 @@ export default {
     showStayLoggedIn: {
       type: Boolean,
       default: false
+    },
+    showUsername: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       email: '',
       password: '',
+      username: '',
       stayLoggedIn: false
     };
   },
   methods: {
     handleSubmit() {
-      this.$emit('submit', { email: this.email, password: this.password, stayLoggedIn: this.stayLoggedIn });
+      this.$emit('submit', { email: this.email, password: this.password, username: this.username, stayLoggedIn: this.stayLoggedIn });
     }
   }
 };

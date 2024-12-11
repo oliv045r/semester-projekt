@@ -2,13 +2,13 @@
     <div class="admin-panel">
         <h1>Admin Panel</h1>
         <div class="buttons">
-            <router-link to="/user-management">
+            <router-link to="/administrer-brugere">
                 <button>Brugere</button>
             </router-link>
-            <router-link to="/manage-swipe">
+            <router-link to="/administrer-swipe">
                 <button>Administrer Swipe</button>
             </router-link>
-            <router-link to="/manage-quiz">
+            <router-link to="/administrer-quiz">
                 <button>Administrer Quiz</button>
             </router-link>
         </div>

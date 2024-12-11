@@ -6,15 +6,23 @@ import './css/style.css'; // Import the global CSS file
 import vGesture from './directives/v-gesture';
 import { auth } from '@/firebase/firebaseConfig';
 
-const app = createApp(App);
+let appMounted = false;
 
-app.directive('gesture', vGesture);
+const createMyApp = () => {
+  const app = createApp(App);
+  app.directive('gesture', vGesture);
+  app.use(router);
+  return app;
+};
 
 auth.onAuthStateChanged((user) => {
+  if (!appMounted) {
+    createMyApp().mount('#app');
+    appMounted = true;
+  }
   if (user) {
     console.log('User is logged in:', user); // Debugging line
   } else {
     console.log('No user is logged in'); // Debugging line
   }
-  app.use(router).mount('#app');
 });

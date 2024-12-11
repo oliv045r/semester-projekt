@@ -6,7 +6,7 @@
             </router-link>
         </div>
         <nav>
-            <ul :class="{ 'nav-open': isNavOpen }" class="nav-links">
+            <ul :class="{ 'nav-open': isNavOpen }" class="nav-links" @click="closeNav">
                 <li><router-link to="/">Forside</router-link></li>
                 <li><router-link to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
                 <li><router-link to="/admin">Admin</router-link></li>
@@ -41,16 +41,31 @@ export default {
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
         },
+        closeNav() {
+            this.isNavOpen = false;
+        },
         async signOut() {
             try {
                 await signOut(auth);
                 console.log('Signed out');
                 this.$router.push('/log-ind'); // Redirect to login page after sign out
+                window.location.reload(); // Ensure the page reloads to update the UI
             } catch (error) {
                 console.error('Error signing out:', error);
             }
         },
+        handleClickOutside(event) {
+            if (!this.$el.contains(event.target)) {
+                this.closeNav();
+            }
+        }
     },
+    mounted() {
+        document.addEventListener('click', this.handleClickOutside);
+    },
+    beforeUnmount() {
+        document.removeEventListener('click', this.handleClickOutside);
+    }
 };
 </script>
 
