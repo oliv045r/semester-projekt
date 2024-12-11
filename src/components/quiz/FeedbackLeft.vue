@@ -2,7 +2,7 @@
   <div class="feedback-container" :class="{ visible: isVisible }">
     <img class="feed-img" src="@/assets/images-feedback/giphy.gif" alt="">
     <h2 class="feed-heading">{{ feedbackHeading }}</h2>
-    <p class="feed-subheading"><strong>Vidste du at</strong></p>
+    <p class="feed-subheading"><strong>Vidste du at:</strong></p>
     <p class="feed-desc">{{ feedbackDesc }}</p>
     <span class="shadow-parent"><button class="feed-right-btn" @click="$emit('next')">Næste</button></span>
   </div>
@@ -53,8 +53,9 @@ export default {
 
 .feed-desc, .feed-subheading {
 margin: 1rem 2rem;    
-text-align: left;
+text-align: left !important;
 }
+
 
 .feed-heading {
     justify-self: flex-start;
@@ -88,5 +89,12 @@ text-align: left;
     right: 0;
     width: 42%;
     filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
+}
+
+.feedback-container p:first-of-type {
+  text-align: left; /* Venstrejuster "Vidste du at" */
+  margin: 0rem 2rem;
+  align-self: flex-start; /* Venstrecentrer teksten */
+  font-weight: semibold;
 }
 </style>
