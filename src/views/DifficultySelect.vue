@@ -9,20 +9,8 @@
       <h3 class ="swipe-header">To valg, et swipe</h3>
       <p>I denne spiltype skal du swipe dig til det rigtige svar blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
-        <router-link :to="{ name: 'Swipe', params: { level: 1 } }">
-          <button class="difficulty-btn dif-active">1</button>
-        </router-link>
-        <router-link :to="{ name: 'Swipe', params: { level: 2 } }">
-          <button class="difficulty-btn">2</button>
-        </router-link>
-        <router-link :to="{ name: 'Swipe', params: { level: 3 } }">
-          <button class="difficulty-btn">3</button>
-        </router-link>
-        <router-link :to="{ name: 'Swipe', params: { level: 4 } }">
-          <button class="difficulty-btn">4</button>
-        </router-link>
-        <router-link :to="{ name: 'Swipe', params: { level: 5 } }">
-          <button class="difficulty-btn">5</button>
+        <router-link v-for="level in 5" :key="'swipe-' + level" :to="{ name: 'Swipe', params: { level } }">
+          <button :class="['difficulty-btn', { 'swipe-active': level <= maxSwipeLevel }]">{{ level }}</button>
         </router-link>
       </div>
     </div>
@@ -30,20 +18,8 @@
       <h3 class="quiz-header">Quiz dig selv</h3>
       <p>Har du lært noget af at swipe? Test hvor meget du kan huske!</p>
       <div class="btn-container quiz-swipe">
-        <router-link :to="{ name: 'Quiz', params: { level: 1 } }">
-          <button class="difficulty-btn dif-active">1</button>
-        </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 2 } }">
-          <button class="difficulty-btn">2</button>
-        </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 3 } }">
-          <button class="difficulty-btn">3</button>
-        </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 4 } }">
-          <button class="difficulty-btn">4</button>
-        </router-link>
-        <router-link :to="{ name: 'Quiz', params: { level: 5 } }">
-          <button class="difficulty-btn">5</button>
+        <router-link v-for="level in 5" :key="'quiz-' + level" :to="{ name: 'Quiz', params: { level } }">
+          <button :class="['difficulty-btn', { 'quiz-active': level <= maxQuizLevel }]">{{ level }}</button>
         </router-link>
       </div>
     </div>
@@ -51,8 +27,27 @@
 </template>
 
 <script>
+import { db, auth } from "@/firebase/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+
 export default {
   name: 'DifficultySelect',
+  data() {
+    return {
+      maxSwipeLevel: 1,
+      maxQuizLevel: 0,
+    };
+  },
+  async created() {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, `users/${user.uid}`);
+      const userDoc = await getDoc(userDocRef);
+      const userData = userDoc.data();
+      this.maxSwipeLevel = userData.maxSwipeLevel || 1;
+      this.maxQuizLevel = userData.maxQuizLevel || 0;
+    }
+  }
 };
 </script>
 
@@ -112,7 +107,11 @@ h2{
   background-color: #949494;
 }
 
-.quiz-swipe .dif-active {
+.swipe-active {
   background-color: var(--secondary-color);
+}
+
+.quiz-active {
+  background-color: var(--main-color);
 }
 </style>

@@ -42,7 +42,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, updateDoc, doc, getDoc } from "firebase/firestore";
 import FeedbackLeft from '@/components/quiz/FeedbackLeft.vue';
 import FeedbackRight from '@/components/quiz/FeedbackRight.vue';
 import SwipeAnimation from "@/components/elements/SwipeAnimation.vue";
@@ -126,7 +126,7 @@ export default {
       }
       this.checkAnswer(direction);
     },
-    checkAnswer(direction) {
+    async checkAnswer(direction) {
       const selectedAnswer = direction === 'left' ? 0 : 1;
       this.logAnswer(selectedAnswer);
     },
@@ -163,7 +163,7 @@ export default {
         }
       }
     },
-    nextQuestion() {
+    async nextQuestion() {
       this.swipedLeft = false;
       this.swipedRight = false;
       this.showFeedbackLeft = false;
@@ -173,8 +173,45 @@ export default {
         this.currentQuestionIndex++;
         this.checkForSwipeAnimation(); // Opdater animation baseret på næste spørgsmål
       } else {
-        const level = this.$route.params.level;
-        this.$router.push({ name: 'SwipeResult', params: { level } });
+        const level = this.$route.params.level; // Get the level from the route parameters
+        const user = auth.currentUser;
+        const progressRef = collection(db, `users/${user.uid}/progress`);
+        const q = query(progressRef, where("quizId", "==", `SwipeQuestions${level}`));
+        const querySnapshot = await getDocs(q);
+        const correctAnswers = querySnapshot.docs.filter(doc => doc.data().isCorrect).length;
+        const totalAnswers = querySnapshot.docs.length;
+        const percentage = (correctAnswers / totalAnswers) * 100;
+
+        if (percentage > 75) {
+          const userDocRef = doc(db, `users/${user.uid}`);
+          const userDoc = await getDoc(userDocRef);
+          const userData = userDoc.data();
+          const maxQuizLevel = userData.maxQuizLevel || 0;
+
+          if (level == 1) {
+            await updateDoc(userDocRef, {
+              maxQuizLevel: Math.max(maxQuizLevel, 1),
+            });
+          } else if (level == 2) {
+            await updateDoc(userDocRef, {
+              maxQuizLevel: Math.max(maxQuizLevel, 2),
+            });
+          } else if (level == 3) {
+            await updateDoc(userDocRef, {
+              maxQuizLevel: Math.max(maxQuizLevel, 3),
+            });
+          } else if (level == 4) {
+            await updateDoc(userDocRef, {
+              maxQuizLevel: Math.max(maxQuizLevel, 4),
+            });
+          } else if (level == 5) {
+            await updateDoc(userDocRef, {
+              maxQuizLevel: Math.max(maxQuizLevel, 5)
+            });
+          }
+        }
+
+        this.$router.push({ name: 'SwipeResult', params: { level } }); // Navigate to SwipeResult with level
       }
     },
   },

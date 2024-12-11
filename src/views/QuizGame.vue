@@ -24,7 +24,7 @@
 
 <script>
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, updateDoc, doc, getDoc } from "firebase/firestore";
 
 export default {
   name: 'QuizGame',
@@ -99,12 +99,45 @@ export default {
         }
       }
     },
-    nextQuestion() {
+    async nextQuestion() {
       this.selectedAnswerIndex = null;
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
       } else {
         const level = this.$route.params.level; // Get the level from the route parameters
+        const user = auth.currentUser;
+        const progressRef = collection(db, `users/${user.uid}/progress`);
+        const q = query(progressRef, where("quizId", "==", `QuizQuestions${level}`));
+        const querySnapshot = await getDocs(q);
+        const correctAnswers = querySnapshot.docs.filter(doc => doc.data().isCorrect).length;
+        const totalAnswers = querySnapshot.docs.length;
+        const percentage = (correctAnswers / totalAnswers) * 100;
+
+        if (percentage > 75) {
+          const userDocRef = doc(db, `users/${user.uid}`);
+          const userDoc = await getDoc(userDocRef);
+          const userData = userDoc.data();
+          const maxSwipeLevel = userData.maxSwipeLevel || 1;
+
+          if (level == 1) {
+            await updateDoc(userDocRef, {
+              maxSwipeLevel: Math.max(maxSwipeLevel, 2),
+            });
+          } else if (level == 2) {
+            await updateDoc(userDocRef, {
+              maxSwipeLevel: Math.max(maxSwipeLevel, 3),
+            });
+          } else if (level == 3) {
+            await updateDoc(userDocRef, {
+              maxSwipeLevel: Math.max(maxSwipeLevel, 4),
+            });
+          } else if (level == 4) {
+            await updateDoc(userDocRef, {
+              maxSwipeLevel: Math.max(maxSwipeLevel, 5),
+            });
+          }
+        }
+
         this.$router.push({ name: 'QuizResult', params: { level } }); // Navigate to ResultPage with level
       }
     },
