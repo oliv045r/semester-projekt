@@ -2,9 +2,9 @@
   <div class="quiz-container" v-if="questions.length > 0">
     <!-- Swipe Animation: vis kun på spørgsmål 1 i niveau 1 -->
     <SwipeAnimation v-if="showSwipeAnimation" />
-    <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
+    <p class="question-number">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <h2>{{ currentQuestion.questionText }}</h2>
+      <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
       <div
@@ -235,6 +235,10 @@ export default {
   font-weight: 600;
 }
 
+p {
+  font-size: 18px;
+}
+
 .question {
   margin: 20px;
   font-size: 22px;
@@ -258,18 +262,25 @@ export default {
 
 .answer.left {
   align-self: flex-end;
+  padding-left: 40px;
+  padding-right: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
   background-color: var(--main-color);
-  clip-path: polygon(3% 0, 100% 0, 100% 100%, 90% 100%, 3% 100%, 0 50%);
-
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 90% 100%, 10% 100%, 0 50%);
+  max-width: 82%; /* Begræns bredden */
 }
 
 .answer.right {
   padding-left: 40px;
   padding-right: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  max-width: 82%; /* Begræns bredden */
   margin-top: 1rem;
   align-self: flex-start;
   background-color: var(--secondary-color);
-  clip-path: polygon(0% 0, 97% 0, 100% 50%, 97% 100%, 00% 100%, 0 50%);
+  clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, -10% 50%);
 }
 .answer.left.swiped {
   transform: translateX(-100%);
