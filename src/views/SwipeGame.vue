@@ -23,17 +23,19 @@
       </div>
     </div>
     <FeedbackLeft
-      :isVisible="showFeedbackLeft"
-      :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
-      :feedbackDesc="currentQuestion.answers[0].feedback"
-      @next="nextQuestion"
-    />
-    <FeedbackRight
-      :isVisible="showFeedbackRight"
-      :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
-      :feedbackDesc="currentQuestion.answers[1].feedback"
-      @next="nextQuestion"
-    />
+  :isVisible="showFeedbackLeft"
+  :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
+  :feedbackDesc="currentQuestion.answers[0].feedback"
+  :gifUrl="currentQuestion.answers[0].gifUrl"
+  @next="nextQuestion"
+/>
+<FeedbackRight
+  :isVisible="showFeedbackRight"
+  :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
+  :feedbackDesc="currentQuestion.answers[1].feedback"
+  :gifUrl="currentQuestion.answers[1].gifUrl"
+  @next="nextQuestion"
+/>
   </div>
   <div v-else>
     <p>Loading questions...</p>

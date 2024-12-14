@@ -28,21 +28,9 @@
             <input type="text" id="answer1" v-model="newQuestion.answers[0].text" required />
           </div>
           <div class="form-group">
-            <label for="feedbackHeading1">Feedback overskrift:</label>
-            <input
-              type="text"
-              id="feedbackHeading1"
-              v-model="newQuestion.answers[0].feedbackHeading"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="feedback1">Feedback:</label>
-            <textarea id="feedback1" v-model="newQuestion.answers[0].feedback" rows="2" required></textarea>
-          </div>
-          <div class="form-group checkbox-group">
-            <label for="isCorrect1">Er korrekt:</label>
-            <input type="checkbox" id="isCorrect1" v-model="newQuestion.answers[0].isCorrect" />
+            <label for="gifUrl1">GIF URL:</label>
+            <input type="text" id="gifUrl1" v-model="newQuestion.answers[0].gifUrl" />
+            <button type="button" @click="openGifModal(0)">Vælg GIF</button>
           </div>
         </div>
         <div class="answer-section">
@@ -52,34 +40,32 @@
             <input type="text" id="answer2" v-model="newQuestion.answers[1].text" required />
           </div>
           <div class="form-group">
-            <label for="feedbackHeading2">Feedback overskrift:</label>
-            <input
-              type="text"
-              id="feedbackHeading2"
-              v-model="newQuestion.answers[1].feedbackHeading"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="feedback2">Feedback:</label>
-            <textarea id="feedback2" v-model="newQuestion.answers[1].feedback" rows="2" required></textarea>
-          </div>
-          <div class="form-group checkbox-group">
-            <label for="isCorrect2">Er korrekt:</label>
-            <input type="checkbox" id="isCorrect2" v-model="newQuestion.answers[1].isCorrect" />
+            <label for="gifUrl2">GIF URL:</label>
+            <input type="text" id="gifUrl2" v-model="newQuestion.answers[1].gifUrl" />
+            <button type="button" @click="openGifModal(1)">Vælg GIF</button>
           </div>
         </div>
         <button type="submit" class="add-button">Add Question</button>
       </form>
     </div>
+
+    <!-- Notifikation -->
+    <div v-if="showNotification" class="notification">
+      Ændringer opdateret korrekt!
+    </div>
+
+    <!-- GIF Modal -->
+    <GifModal
+      v-if="showGifModal"
+      :isVisible="showGifModal"
+      @select="handleGifSelect"
+      @close="showGifModal = false"
+    />
+
     <div v-else>
       <h3>Spørgsmål til level {{ selectedLevel }}</h3>
       <div v-if="questions.length > 0">
-        <div
-          v-for="(question, index) in questions"
-          :key="question.id"
-          class="accordion-item"
-        >
+        <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
           <div class="accordion-header" @click="toggleAccordion(index)">
             <h3>{{ question.questionText }}</h3>
             <span>{{ activeIndex === index ? '-' : '+' }}</span>
@@ -97,24 +83,9 @@
                   <input type="text" v-model="question.answers[0].text" required />
                 </div>
                 <div class="form-group">
-                  <label for="feedbackHeading1">Feedback overskrift:</label>
-                  <input
-                    type="text"
-                    v-model="question.answers[0].feedbackHeading"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="feedback1">Feedback:</label>
-                  <textarea
-                    v-model="question.answers[0].feedback"
-                    rows="2"
-                    required
-                  ></textarea>
-                </div>
-                <div class="form-group checkbox-group">
-                  <label for="isCorrect1">Er korrekt:</label>
-                  <input type="checkbox" v-model="question.answers[0].isCorrect" />
+                  <label for="gifUrl1">GIF URL:</label>
+                  <input type="text" v-model="question.answers[0].gifUrl" />
+                  <button type="button" @click="openGifModal(0, question)">Vælg GIF</button>
                 </div>
               </div>
               <div class="answer-section">
@@ -124,33 +95,14 @@
                   <input type="text" v-model="question.answers[1].text" required />
                 </div>
                 <div class="form-group">
-                  <label for="feedbackHeading2">Feedback overskrift:</label>
-                  <input
-                    type="text"
-                    v-model="question.answers[1].feedbackHeading"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="feedback2">Feedback:</label>
-                  <textarea
-                    v-model="question.answers[1].feedback"
-                    rows="2"
-                    required
-                  ></textarea>
-                </div>
-                <div class="form-group checkbox-group">
-                  <label for="isCorrect2">Er korrekt:</label>
-                  <input type="checkbox" v-model="question.answers[1].isCorrect" />
+                  <label for="gifUrl2">GIF URL:</label>
+                  <input type="text" v-model="question.answers[1].gifUrl" />
+                  <button type="button" @click="openGifModal(1, question)">Vælg GIF</button>
                 </div>
               </div>
               <div class="button-group">
                 <button type="submit" class="update-button">Opdater spørgsmål</button>
-                <button
-                  type="button"
-                  class="delete-button"
-                  @click="deleteQuestion(question.id)"
-                >
+                <button type="button" class="delete-button" @click="deleteQuestion(question.id)">
                   Slet spørgsmål
                 </button>
               </div>
@@ -169,96 +121,100 @@
 <script>
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, setDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
+import GifModal from "@/components/elements/GifModal.vue";
 
 export default {
-  name: 'AddSwipe',
+  name: "QuizManagement",
+  components: { GifModal },
   data() {
     return {
       selectedLevel: 1,
       showAddForm: false,
+      showGifModal: false,
+      showNotification: false, // Kontroller notifikationens synlighed
+      selectedAnswerIndex: null,
+      selectedQuestion: null,
+      newQuestion: {
+        questionText: "",
+        answers: [
+          { text: "", gifUrl: "" },
+          { text: "", gifUrl: "" },
+        ],
+      },
       questions: [],
       activeIndex: null,
-      newQuestion: {
-        questionText: '',
-        answers: [
-          { text: '', feedbackHeading: '', feedback: '', isCorrect: false },
-          { text: '', feedbackHeading: '', feedback: '', isCorrect: false }
-        ]
-      }
     };
   },
   methods: {
-    async fetchQuestions() {
-      try {
-        const q = query(collection(db, "SwipeQuestions"), where("SwipeLevel", "==", this.selectedLevel.toString()));
-        const querySnapshot = await getDocs(q);
-        this.questions = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      } catch (error) {
-        console.error("Error fetching questions:", error);
+    openGifModal(answerIndex, question = null) {
+      this.selectedAnswerIndex = answerIndex;
+      this.selectedQuestion = question;
+      this.showGifModal = true;
+    },
+    handleGifSelect(gifUrl) {
+      if (this.selectedQuestion) {
+        this.selectedQuestion.answers[this.selectedAnswerIndex].gifUrl = gifUrl;
+      } else {
+        this.newQuestion.answers[this.selectedAnswerIndex].gifUrl = gifUrl;
       }
+      this.showGifModal = false;
+    },
+    async fetchQuestions() {
+      const q = query(collection(db, "SwipeQuestions"), where("SwipeLevel", "==", this.selectedLevel.toString()));
+      const querySnapshot = await getDocs(q);
+      this.questions = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
     async addQuestion() {
-      try {
-        const questionId = `q${Date.now()}`;
-        await setDoc(doc(db, "SwipeQuestions", questionId), {
-          questionId,
-          SwipeLevel: this.selectedLevel.toString(),
-          ...this.newQuestion
-        });
-        this.fetchQuestions();
-        this.resetForm();
-        this.showAddForm = false;
-      } catch (error) {
-        console.error("Error adding question:", error);
-      }
+      const questionId = `q${Date.now()}`;
+      await setDoc(doc(db, "SwipeQuestions", questionId), {
+        ...this.newQuestion,
+        SwipeLevel: this.selectedLevel.toString(),
+      });
+      this.fetchQuestions();
     },
     async updateQuestion(questionId) {
-      try {
-        const question = this.questions.find(q => q.id === questionId);
-        await updateDoc(doc(db, "SwipeQuestions", questionId), question);
-        this.fetchQuestions();
-      } catch (error) {
-        console.error("Error updating question:", error);
-      }
+      const question = this.questions.find((q) => q.id === questionId);
+      await updateDoc(doc(db, "SwipeQuestions", questionId), question);
+      this.fetchQuestions();
+      this.showNotification = true; // Vis notifikation
+      setTimeout(() => {
+        this.showNotification = false; // Skjul efter 3 sekunder
+      }, 3000);
     },
     async deleteQuestion(questionId) {
-      try {
-        await deleteDoc(doc(db, "SwipeQuestions", questionId));
-        this.fetchQuestions();
-      } catch (error) {
-        console.error("Error deleting question:", error);
-      }
+      await deleteDoc(doc(db, "SwipeQuestions", questionId));
+      this.fetchQuestions();
     },
     toggleAccordion(index) {
       this.activeIndex = this.activeIndex === index ? null : index;
     },
-    resetForm() {
-      this.newQuestion = {
-        questionText: '',
-        answers: [
-          { text: '', feedbackHeading: '', feedback: '', isCorrect: false },
-          { text: '', feedbackHeading: '', feedback: '', isCorrect: false }
-        ]
-      };
-    }
   },
-  async created() {
+  created() {
     this.fetchQuestions();
-  }
+  },
 };
 </script>
+
 
 <style scoped>
 /* General Styles */
 :root {
-  --main-color: #2D8BD9; /* Primary blue */
-  --secondary-color: #1A6CAB; /* Darker blue for hover */
-  --accent-color: #FFFFFF; /* White for form background */
-  --highlight-color: #F35D0C; /* Orange for emphasis */
-  --text-color: #323232; /* Dark gray for text */
-  --background-color: #000000; /* Black for page background */
-  --input-border-color: #CCCCCC; /* Light gray for input borders */
-  --input-focus-color: #2D8BD9; /* Blue for focused input border */
+  --main-color: #2D8BD9;
+  /* Primary blue */
+  --secondary-color: #1A6CAB;
+  /* Darker blue for hover */
+  --accent-color: #FFFFFF;
+  /* White for form background */
+  --highlight-color: #F35D0C;
+  /* Orange for emphasis */
+  --text-color: #323232;
+  /* Dark gray for text */
+  --background-color: #000000;
+  /* Black for page background */
+  --input-border-color: #CCCCCC;
+  /* Light gray for input borders */
+  --input-focus-color: #2D8BD9;
+  /* Blue for focused input border */
 }
 
 body {
@@ -274,23 +230,28 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 20px;
-  width: 100%; /* Ensure full width for the container */
+  width: 100%;
+  /* Ensure full width for the container */
   height: 100vh;
   overflow-y: auto;
   box-sizing: border-box;
 }
 
-h2, h3 {
+h2,
+h3 {
   text-align: left;
   margin-bottom: 20px;
 }
 
 h2 {
-  margin-top: 0; /* Ensure the heading starts within the container */
-  padding-top: 50px; /* Add some padding to give space around it */
+  margin-top: 0;
+  /* Ensure the heading starts within the container */
+  padding-top: 50px;
+  /* Add some padding to give space around it */
   color: var(--main-color);
   text-align: center;
-  font-size: 1.8em; /* Ensure readability on smaller screens */
+  font-size: 1.8em;
+  /* Ensure readability on smaller screens */
 }
 
 .level-selector {
@@ -338,7 +299,8 @@ select:focus {
   color: var(--text-color);
 }
 
-input[type="text"], textarea {
+input[type="text"],
+textarea {
   padding: 10px;
   border: 1px solid var(--input-border-color);
   border-radius: 4px;
@@ -349,7 +311,8 @@ textarea {
   resize: none;
 }
 
-input[type="text"]:focus, textarea:focus {
+input[type="text"]:focus,
+textarea:focus {
   border-color: var(--input-focus-color);
   outline: none;
 }
@@ -409,8 +372,21 @@ button:hover {
   background-color: var(--secondary-color);
 }
 
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
 .delete-button {
-  background-color: #d9534f; /* Red for delete button */
+  background-color: #d9534f;
+  /* Red for delete button */
 }
 
 .delete-button:hover {
@@ -457,10 +433,10 @@ button:hover {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 </style>
-
