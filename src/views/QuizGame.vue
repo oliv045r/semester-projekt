@@ -1,8 +1,8 @@
 <template>
   <div class="quiz-container" v-if="questions.length > 0">
-    <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
+    <p class="question-number">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <h2>{{ currentQuestion.questionText }}</h2>
+      <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
       <div

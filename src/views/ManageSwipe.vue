@@ -12,7 +12,7 @@
       </select>
     </div>
     <button @click="showAddForm = !showAddForm" class="add-button">
-      {{ showAddForm ? 'Cancel' : 'Add Swipe Question' }}
+      {{ showAddForm ? 'Annuller' : 'Tilføj Swipe spørgsmål' }}
     </button>
     <div v-if="showAddForm" class="add-question-container">
       <h3>Tilføj Swipe spørgsmål</h3>
@@ -32,6 +32,18 @@
             <input type="text" id="gifUrl1" v-model="newQuestion.answers[0].gifUrl" />
             <button type="button" @click="openGifModal(0)">Vælg GIF</button>
           </div>
+          <div class="form-group">
+            <label for="feedbackHeading1">Feedback overskrift:</label>
+            <input type="text" id="feedbackHeading1" v-model="newQuestion.answers[0].feedbackHeading" required />
+          </div>
+          <div class="form-group">
+            <label for="feedback1">Feedback:</label>
+            <textarea id="feedback1" v-model="newQuestion.answers[0].feedback" rows="2" required></textarea>
+          </div>
+          <div class="form-group checkbox-group">
+            <label for="isCorrect1">Er korrekt:</label>
+            <input type="checkbox" id="isCorrect1" v-model="newQuestion.answers[0].isCorrect" />
+          </div>
         </div>
         <div class="answer-section">
           <h4>Svar 2</h4>
@@ -44,14 +56,21 @@
             <input type="text" id="gifUrl2" v-model="newQuestion.answers[1].gifUrl" />
             <button type="button" @click="openGifModal(1)">Vælg GIF</button>
           </div>
+          <div class="form-group">
+            <label for="feedbackHeading2">Feedback overskrift:</label>
+            <input type="text" id="feedbackHeading2" v-model="newQuestion.answers[1].feedbackHeading" required />
+          </div>
+          <div class="form-group">
+            <label for="feedback2">Feedback:</label>
+            <textarea id="feedback2" v-model="newQuestion.answers[1].feedback" rows="2" required></textarea>
+          </div>
+          <div class="form-group checkbox-group">
+            <label for="isCorrect2">Er korrekt:</label>
+            <input type="checkbox" id="isCorrect2" v-model="newQuestion.answers[1].isCorrect" />
+          </div>
         </div>
-        <button type="submit" class="add-button">Add Question</button>
+        <button type="submit" class="add-button">Tilføj spørgsmål</button>
       </form>
-    </div>
-
-    <!-- Notifikation -->
-    <div v-if="showNotification" class="notification">
-      Ændringer opdateret korrekt!
     </div>
 
     <!-- GIF Modal -->
@@ -67,7 +86,7 @@
       <div v-if="questions.length > 0">
         <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
           <div class="accordion-header" @click="toggleAccordion(index)">
-            <h3>{{ question.questionText }}</h3>
+            <p class="question-resume">{{ question.questionText }}</p>
             <span>{{ activeIndex === index ? '-' : '+' }}</span>
           </div>
           <div v-if="activeIndex === index" class="accordion-content">
@@ -87,6 +106,18 @@
                   <input type="text" v-model="question.answers[0].gifUrl" />
                   <button type="button" @click="openGifModal(0, question)">Vælg GIF</button>
                 </div>
+                <div class="form-group">
+                  <label for="feedbackHeading1">Feedback overskrift:</label>
+                  <input type="text" v-model="question.answers[0].feedbackHeading" required />
+                </div>
+                <div class="form-group">
+                  <label for="feedback1">Feedback:</label>
+                  <textarea v-model="question.answers[0].feedback" rows="2" required></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label for="isCorrect1">Er korrekt:</label>
+                  <input type="checkbox" v-model="question.answers[0].isCorrect" />
+                </div>
               </div>
               <div class="answer-section">
                 <h4>Svar 2</h4>
@@ -98,6 +129,18 @@
                   <label for="gifUrl2">GIF URL:</label>
                   <input type="text" v-model="question.answers[1].gifUrl" />
                   <button type="button" @click="openGifModal(1, question)">Vælg GIF</button>
+                </div>
+                <div class="form-group">
+                  <label for="feedbackHeading2">Feedback overskrift:</label>
+                  <input type="text" v-model="question.answers[1].feedbackHeading" required />
+                </div>
+                <div class="form-group">
+                  <label for="feedback2">Feedback:</label>
+                  <textarea v-model="question.answers[1].feedback" rows="2" required></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label for="isCorrect2">Er korrekt:</label>
+                  <input type="checkbox" v-model="question.answers[1].isCorrect" />
                 </div>
               </div>
               <div class="button-group">
@@ -111,12 +154,11 @@
         </div>
       </div>
       <div v-else>
-        <p>Ingen spørgsmål fundet til dette level</p>
+        <p>Ingen spørgsmål fundet til dette niveau</p>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { db } from "@/firebase/firebaseConfig";
@@ -131,14 +173,13 @@ export default {
       selectedLevel: 1,
       showAddForm: false,
       showGifModal: false,
-      showNotification: false, // Kontroller notifikationens synlighed
       selectedAnswerIndex: null,
       selectedQuestion: null,
       newQuestion: {
         questionText: "",
         answers: [
-          { text: "", gifUrl: "" },
-          { text: "", gifUrl: "" },
+          { text: "", gifUrl: "", feedbackHeading: "", feedback: "", isCorrect: false },
+          { text: "", gifUrl: "", feedbackHeading: "", feedback: "", isCorrect: false },
         ],
       },
       questions: [],
@@ -176,10 +217,6 @@ export default {
       const question = this.questions.find((q) => q.id === questionId);
       await updateDoc(doc(db, "SwipeQuestions", questionId), question);
       this.fetchQuestions();
-      this.showNotification = true; // Vis notifikation
-      setTimeout(() => {
-        this.showNotification = false; // Skjul efter 3 sekunder
-      }, 3000);
     },
     async deleteQuestion(questionId) {
       await deleteDoc(doc(db, "SwipeQuestions", questionId));
@@ -238,7 +275,7 @@ body {
 }
 
 h2,
-h3 {
+.question-resume {
   text-align: left;
   margin-bottom: 20px;
 }
