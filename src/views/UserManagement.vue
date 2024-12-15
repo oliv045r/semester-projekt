@@ -1,20 +1,17 @@
 <template>
   <div class="admin-container">
-    <h2>User Management</h2>
-    <div v-if="users.length > 0">
-      <div v-for="(user, index) in users" :key="user.userId" class="accordion-item">
-        <div class="accordion-header" @click="toggleAccordion(index)">
-          <h3>{{ user.username }}</h3>
-          <span>{{ activeIndex === index ? '-' : '+' }}</span>
-        </div>
-        <div v-if="activeIndex === index" class="accordion-content">
-          <p><strong>User ID:</strong> {{ user.userId }}</p>
-          <p><strong>Swipe Level:</strong> {{ user.maxSwipeLevel || 'N/A' }}</p>
-          <p><strong>Quiz Level:</strong> {{ user.maxQuizLevel || 'N/A' }}</p>
-          <button @click="resetProgress(user.userId)">Reset Progress</button>
-          <button @click="deleteUser(user.userId)">Delete User</button>
-        </div>
-      </div>
+    <h2>Administrer brugere</h2>
+    <div class="user-container" v-if="users.length > 0">
+      <UserAccordion
+        v-for="(user, index) in users"
+        :key="user.userId"
+        :user="user"
+        :index="index"
+        :isActive="activeIndex === index"
+        :toggleAccordion="toggleAccordion"
+        :resetProgress="resetProgress"
+        :deleteUser="deleteUser"
+      />
     </div>
     <div v-else>
       <p>No users found.</p>
@@ -25,9 +22,13 @@
 <script>
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, deleteDoc, doc, updateDoc, deleteField, writeBatch } from "firebase/firestore";
+import UserAccordion from "@/components/admin/UserAccordion.vue";
 
 export default {
   name: 'UserManagement',
+  components: {
+    UserAccordion
+  },
   data() {
     return {
       users: [],
@@ -94,39 +95,21 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  width: 90%;
 }
 
-.accordion-item {
-  width: 100%;
-  border: 1px solid #ccc;
-  margin-bottom: 1rem;
+.admin-container h2 {
+  margin-bottom: 20px;
 }
 
-.accordion-header {
+.user-container {
   display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  cursor: pointer;
-  background-color: #323232;
-  color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  height: 33.8rem;
+  overflow-x: hidden;
 }
 
-.accordion-content {
-  padding: 1rem;
-  background-color: #444;
-  color: white;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: var(--main-color);
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-right: 10px;
-}
-
-button:hover {
-  background-color: var(--secondary-color);
-}
 </style>
