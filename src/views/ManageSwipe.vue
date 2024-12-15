@@ -331,7 +331,6 @@ select:focus {
 }
 
 .form-group label {
-  font-weight: bold;
   margin-bottom: 5px;
   color: var(--text-color);
 }

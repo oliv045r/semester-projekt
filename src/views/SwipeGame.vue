@@ -2,7 +2,7 @@
   <div class="quiz-container" v-if="questions.length > 0">
     <!-- Swipe Animation: vis kun på spørgsmål 1 i niveau 1 -->
     <SwipeAnimation v-if="showSwipeAnimation" />
-    <p class="question-number">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
+    <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
     <div class="question">
       <p>{{ currentQuestion.questionText }}</p>
     </div>
@@ -24,6 +24,7 @@
     </div>
     <FeedbackLeft
   :isVisible="showFeedbackLeft"
+  :class="feedbackBorderClass"
   :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
   :feedbackDesc="currentQuestion.answers[0].feedback"
   :gifUrl="currentQuestion.answers[0].gifUrl"
@@ -31,11 +32,13 @@
 />
 <FeedbackRight
   :isVisible="showFeedbackRight"
+  :class="feedbackBorderClass"
   :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
   :feedbackDesc="currentQuestion.answers[1].feedback"
   :gifUrl="currentQuestion.answers[1].gifUrl"
   @next="nextQuestion"
 />
+
   </div>
   <div v-else>
     <p>Loading questions...</p>
@@ -62,6 +65,7 @@ export default {
       currentQuestionIndex: 0,
       swipedLeft: false,
       swipedRight: false,
+      feedbackBorderClass: "", // Ny variabel til CSS-klasser
       showFeedbackLeft: false,
       showFeedbackRight: false,
       showSwipeAnimation: false, // Tilføj variabel til animation
@@ -119,15 +123,31 @@ export default {
       }
     },
     handleSwipe(direction) {
-      if (direction === 'left') {
-        this.swipedLeft = true;
-        this.showFeedbackLeft = true;
-      } else if (direction === 'right') {
-        this.swipedRight = true;
-        this.showFeedbackRight = true;
-      }
-      this.checkAnswer(direction);
-    },
+  if (direction === 'left') {
+    this.swipedLeft = true;
+    this.showFeedbackLeft = true;
+  } else if (direction === 'right') {
+    this.swipedRight = true;
+    this.showFeedbackRight = true;
+  }
+
+  // Tilføj korrekt feedback border efter en kort forsinkelse
+  setTimeout(() => {
+    const selectedAnswer = direction === 'left' ? 0 : 1;
+    const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
+
+    this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border";
+
+    // Fjern klassen efter 2 sekunder
+    setTimeout(() => {
+      this.feedbackBorderClass = "";
+    }, 2000);
+  }, 300); // 300ms forsinkelse for at give swipe-animationen tid
+
+  this.checkAnswer(direction);
+},
+
+
     async checkAnswer(direction) {
       const selectedAnswer = direction === 'left' ? 0 : 1;
       this.logAnswer(selectedAnswer);
@@ -237,10 +257,6 @@ export default {
   font-weight: 600;
 }
 
-p {
-  font-size: 18px;
-}
-
 .question {
   margin: 20px;
   font-size: 22px;
@@ -255,7 +271,7 @@ p {
   width: 100%;
 }
 .answer {
-  width: 85%;
+  width: 83%;
   padding: 30px;
   text-align: left;
   cursor: pointer;
@@ -264,25 +280,18 @@ p {
 
 .answer.left {
   align-self: flex-end;
-  padding-left: 40px;
-  padding-right: 20px;
-  padding-top: 40px;
-  padding-bottom: 40px;
   background-color: var(--main-color);
-  clip-path: polygon(10% 0, 100% 0, 100% 100%, 90% 100%, 10% 100%, 0 50%);
-  max-width: 82%; /* Begræns bredden */
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 92% 100%, 10% 100%, 0 50%);
+
 }
 
 .answer.right {
   padding-left: 40px;
   padding-right: 20px;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  max-width: 82%; /* Begræns bredden */
   margin-top: 1rem;
   align-self: flex-start;
   background-color: var(--secondary-color);
-  clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, -10% 50%);
+  clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, 0 50%);
 }
 .answer.left.swiped {
   transform: translateX(-100%);
@@ -290,4 +299,20 @@ p {
 .answer.right.swiped {
   transform: translateX(100%);
 }
+
+.correct-border {
+  border: 10px solid green;
+  box-sizing: border-box;
+}
+
+.incorrect-border {
+  border: 10px solid red;
+  box-sizing: border-box;
+}
+
+.correct-border,
+.incorrect-border {
+  transition: border 0.3s ease-in-out;
+}
+
 </style>

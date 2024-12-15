@@ -7,7 +7,7 @@
     </div>
     <div class="quiz-container">
       <h3 class ="swipe-header">To valg, et swipe</h3>
-      <p>I denne spiltype skal du swipe dig til det rigtige svar blandt to valgmuligheder</p>
+      <p>Swipe dig til det mest bæredygtige valg blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
         <router-link v-for="level in 5" :key="'swipe-' + level" :to="{ name: 'Swipe', params: { level } }">
           <button :class="['difficulty-btn', { 'swipe-active': level <= maxSwipeLevel }]">{{ level }}</button>
