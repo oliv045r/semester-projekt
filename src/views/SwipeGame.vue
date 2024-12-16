@@ -284,12 +284,12 @@ export default {
 }
 
 .correct-border {
-  border: 10px solid green;
+  box-shadow: rgb(0, 255, 0) 0px 0px 20px 8px inset;
   box-sizing: border-box;
 }
 
 .incorrect-border {
-  border: 10px solid red;
+  box-shadow: rgb(255, 0, 0) 0px 0px 20px 8px inset;
   box-sizing: border-box;
 }
 
