@@ -40,7 +40,7 @@
       <div v-if="questions.length > 0">
         <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
           <div class="accordion-header" @click="toggleAccordion(index)">
-            <h3>{{ question.questionText }}</h3>
+            <p>{{ question.questionText }}</p>
             <span>{{ activeIndex === index ? '-' : '+' }}</span>
           </div>
           <div v-if="activeIndex === index" class="accordion-content">
@@ -342,12 +342,12 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: left;
+  text-align: left;
   padding: 15px;
   cursor: pointer;
   background-color: var(--main-color);
   color: var(--accent-color);
   font-size: 16px;
-  font-weight: bold;
   transition: background-color 0.3s ease;
 }
 
