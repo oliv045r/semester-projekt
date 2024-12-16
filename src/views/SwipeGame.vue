@@ -2,42 +2,24 @@
   <div class="quiz-container" v-if="questions.length > 0">
     <!-- Swipe Animation: vis kun på spørgsmål 1 i niveau 1 -->
     <SwipeAnimation v-if="showSwipeAnimation" />
-    <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
+    <p class="question-number">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
     <div class="question">
       <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
-      <div
-        class="answer left"
-        v-gesture="handleSwipe"
-        :class="{ swiped: swipedLeft }"
-      >
+      <div class="answer left" v-gesture="handleSwipe" :class="{ swiped: swipedLeft }">
         {{ currentQuestion.answers[0].text }}
       </div>
-      <div
-        class="answer right"
-        v-gesture="handleSwipe"
-        :class="{ swiped: swipedRight }"
-      >
+      <div class="answer right" v-gesture="handleSwipe" :class="{ swiped: swipedRight }">
         {{ currentQuestion.answers[1].text }}
       </div>
     </div>
-    <FeedbackLeft
-  :isVisible="showFeedbackLeft"
-  :class="feedbackBorderClass"
-  :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
-  :feedbackDesc="currentQuestion.answers[0].feedback"
-  :gifUrl="currentQuestion.answers[0].gifUrl"
-  @next="nextQuestion"
-/>
-<FeedbackRight
-  :isVisible="showFeedbackRight"
-  :class="feedbackBorderClass"
-  :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
-  :feedbackDesc="currentQuestion.answers[1].feedback"
-  :gifUrl="currentQuestion.answers[1].gifUrl"
-  @next="nextQuestion"
-/>
+    <FeedbackLeft :isVisible="showFeedbackLeft" :class="feedbackBorderClass"
+      :feedbackHeading="currentQuestion.answers[0].feedbackHeading" :feedbackDesc="currentQuestion.answers[0].feedback"
+      :gifUrl="currentQuestion.answers[0].gifUrl" @next="nextQuestion" />
+    <FeedbackRight :isVisible="showFeedbackRight" :class="feedbackBorderClass"
+      :feedbackHeading="currentQuestion.answers[1].feedbackHeading" :feedbackDesc="currentQuestion.answers[1].feedback"
+      :gifUrl="currentQuestion.answers[1].gifUrl" @next="nextQuestion" />
 
   </div>
   <div v-else>
@@ -110,43 +92,42 @@ export default {
       ) {
         this.showSwipeAnimation = true;
         setTimeout(() => {
-        const animationElement = document.querySelector(".swipe-animation");
-        if (animationElement) {
-          animationElement.classList.add("hidden"); // Tilføj fade-out klassen
-        }
-        setTimeout(() => {
-          this.showSwipeAnimation = false; // Fjern helt efter fade-out
-        }, 1000); // Match fade-out tiden (1s i CSS)
-      }, 6000);
+          const animationElement = document.querySelector(".swipe-animation");
+          if (animationElement) {
+            animationElement.classList.add("hidden"); // Tilføj fade-out klassen
+          }
+          setTimeout(() => {
+            this.showSwipeAnimation = false; // Fjern helt efter fade-out
+          }, 1000); // Match fade-out tiden (1s i CSS)
+        }, 6000);
       } else {
         this.showSwipeAnimation = false;
       }
     },
     handleSwipe(direction) {
-  if (direction === 'left') {
-    this.swipedLeft = true;
-    this.showFeedbackLeft = true;
-  } else if (direction === 'right') {
-    this.swipedRight = true;
-    this.showFeedbackRight = true;
-  }
+      if (direction === 'left') {
+        this.swipedLeft = true;
+        this.showFeedbackLeft = true;
+      } else if (direction === 'right') {
+        this.swipedRight = true;
+        this.showFeedbackRight = true;
+      }
 
-  // Tilføj korrekt feedback border efter en kort forsinkelse
-  setTimeout(() => {
-    const selectedAnswer = direction === 'left' ? 0 : 1;
-    const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
+      // Tilføj korrekt feedback border efter en kort forsinkelse
+      setTimeout(() => {
+        const selectedAnswer = direction === 'left' ? 0 : 1;
+        const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
 
-    this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border";
+        this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border";
 
-    // Fjern klassen efter 2 sekunder
-    setTimeout(() => {
-      this.feedbackBorderClass = "";
-    }, 2000);
-  }, 300); // 300ms forsinkelse for at give swipe-animationen tid
+        // Fjern klassen efter 2 sekunder
+        setTimeout(() => {
+          this.feedbackBorderClass = "";
+        }, 2000);
+      }, 300); // 300ms forsinkelse for at give swipe-animationen tid
 
-  this.checkAnswer(direction);
-},
-
+      this.checkAnswer(direction);
+    },
 
     async checkAnswer(direction) {
       const selectedAnswer = direction === 'left' ? 0 : 1;
@@ -261,7 +242,7 @@ export default {
   margin: 20px;
   font-size: 22px;
   text-align: left;
-  font-weight:normal;
+  font-weight: normal;
 }
 
 .answers {
@@ -270,6 +251,7 @@ export default {
   justify-content: space-between;
   width: 100%;
 }
+
 .answer {
   width: 83%;
   padding: 30px;
@@ -282,7 +264,6 @@ export default {
   align-self: flex-end;
   background-color: var(--main-color);
   clip-path: polygon(10% 0, 100% 0, 100% 100%, 92% 100%, 10% 100%, 0 50%);
-
 }
 
 .answer.right {
@@ -293,9 +274,11 @@ export default {
   background-color: var(--secondary-color);
   clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, 0 50%);
 }
+
 .answer.left.swiped {
   transform: translateX(-100%);
 }
+
 .answer.right.swiped {
   transform: translateX(100%);
 }
@@ -314,5 +297,4 @@ export default {
 .incorrect-border {
   transition: border 0.3s ease-in-out;
 }
-
 </style>
