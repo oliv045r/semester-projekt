@@ -1,10 +1,17 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
-    <img class="feed-img" src="@/assets/images-feedback/giphy.gif" alt="">
+    <!-- Dynamisk GIF-url med fallback -->
+    <img
+      class="feed-img"
+      :src="gifUrl || '@/assets/images-feedback/giphy.gif'"
+      alt="Feedback GIF"
+    >
     <h2 class="feed-heading">{{ feedbackHeading }}</h2>
     <p class="feed-subheading"><strong>Vidste du at:</strong></p>
     <p class="feed-desc">{{ feedbackDesc }}</p>
-    <span class="shadow-parent"><button class="feed-right-btn" @click="$emit('next')">Næste</button></span>
+    <span class="shadow-parent">
+      <button class="feed-right-btn" @click="$emit('next')">Næste</button>
+    </span>
   </div>
 </template>
 
@@ -23,6 +30,10 @@ export default {
     feedbackDesc: {
       type: String,
       required: true
+    },
+    gifUrl: {
+      type: String,
+      default: null // Standardværdi, hvis gifUrl ikke er tilgængelig
     }
   }
 };
@@ -47,26 +58,26 @@ export default {
 }
 
 .feed-img {
-    width: calc(100% - 4rem);
-    border-radius: 15px;
+  width: calc(100% - 4rem);
+  border-radius: 15px;
 }
 
-.feed-desc, .feed-subheading {
-margin: 1rem 2rem;    
-text-align: left !important;
+.feed-desc,
+.feed-subheading {
+  margin: 1rem 2rem;    
+  text-align: left !important;
 }
-
 
 .feed-heading {
-    justify-self: flex-start;
-    align-self: flex-start;
-    margin: 1rem 2rem;
-    text-align: left;
+  justify-self: flex-start;
+  align-self: flex-start;
+  margin: 1rem 2rem;
+  text-align: left;
 }
 
 .feed-right-btn {
-    width: 100%;
-    display: inline-block;
+  width: 100%;
+  display: inline-block;
   background-color: var(--secondary-color); /* Blue color */
   color: #fff; /* White text */
   font-size: 18px; /* Adjust as needed */
@@ -77,18 +88,18 @@ text-align: left !important;
   transition: background-color 0.3s ease;
   border: none;
   font-family: Poppins;
-    clip-path: polygon(7% 0, 100% 0, 100% 50%, 100% 100%, 7% 100%, 0 50%);
-    filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
+  clip-path: polygon(7% 0, 100% 0, 100% 50%, 100% 100%, 7% 100%, 0 50%);
+  filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
 }
 
 .shadow-parent {
-    position: absolute;
-    bottom: 2rem;
-    justify-self: flex-end;
-    align-self: flex-start;
-    right: 0;
-    width: 42%;
-    filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
+  position: absolute;
+  bottom: 2rem;
+  justify-self: flex-end;
+  align-self: flex-start;
+  right: 0;
+  width: 42%;
+  filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
 }
 
 .feedback-container p:first-of-type {

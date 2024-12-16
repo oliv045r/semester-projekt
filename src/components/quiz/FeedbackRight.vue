@@ -1,12 +1,13 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
-    <img class="feed-img" src="@/assets/images-feedback/caught-in.gif" alt="">
+    <img class="feed-img" :src="gifUrl || '@/assets/images-feedback/caught-in.gif'" alt="Feedback GIF">
     <h2 class="feed-heading">{{ feedbackHeading }}</h2>
     <p>Vidste du at:</p>
     <p class="feed-desc">{{ feedbackDesc }}</p>
-    <span class="shadow-parent"><button class="feed-right-btn" @click="$emit('next')">Næste</button></span>
+    <span class="shadow-parent">
+      <button class="feed-right-btn" @click="$emit('next')">Næste</button>
+    </span>
   </div>
-
 </template>
 
 <script>
@@ -24,6 +25,10 @@ export default {
     feedbackDesc: {
       type: String,
       required: true
+    },
+    gifUrl: {
+      type: String,
+      default: null
     }
   }
 };

@@ -4,7 +4,7 @@
     <SwipeAnimation v-if="showSwipeAnimation" />
     <p class="question-number">{{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <h2>{{ currentQuestion.questionText }}</h2>
+      <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
       <div
@@ -23,17 +23,22 @@
       </div>
     </div>
     <FeedbackLeft
-      :isVisible="showFeedbackLeft"
-      :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
-      :feedbackDesc="currentQuestion.answers[0].feedback"
-      @next="nextQuestion"
-    />
-    <FeedbackRight
-      :isVisible="showFeedbackRight"
-      :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
-      :feedbackDesc="currentQuestion.answers[1].feedback"
-      @next="nextQuestion"
-    />
+  :isVisible="showFeedbackLeft"
+  :class="feedbackBorderClass"
+  :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
+  :feedbackDesc="currentQuestion.answers[0].feedback"
+  :gifUrl="currentQuestion.answers[0].gifUrl"
+  @next="nextQuestion"
+/>
+<FeedbackRight
+  :isVisible="showFeedbackRight"
+  :class="feedbackBorderClass"
+  :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
+  :feedbackDesc="currentQuestion.answers[1].feedback"
+  :gifUrl="currentQuestion.answers[1].gifUrl"
+  @next="nextQuestion"
+/>
+
   </div>
   <div v-else>
     <p>Loading questions...</p>
@@ -60,6 +65,7 @@ export default {
       currentQuestionIndex: 0,
       swipedLeft: false,
       swipedRight: false,
+      feedbackBorderClass: "", // Ny variabel til CSS-klasser
       showFeedbackLeft: false,
       showFeedbackRight: false,
       showSwipeAnimation: false, // Tilføj variabel til animation
@@ -117,15 +123,31 @@ export default {
       }
     },
     handleSwipe(direction) {
-      if (direction === 'left') {
-        this.swipedLeft = true;
-        this.showFeedbackLeft = true;
-      } else if (direction === 'right') {
-        this.swipedRight = true;
-        this.showFeedbackRight = true;
-      }
-      this.checkAnswer(direction);
-    },
+  if (direction === 'left') {
+    this.swipedLeft = true;
+    this.showFeedbackLeft = true;
+  } else if (direction === 'right') {
+    this.swipedRight = true;
+    this.showFeedbackRight = true;
+  }
+
+  // Tilføj korrekt feedback border efter en kort forsinkelse
+  setTimeout(() => {
+    const selectedAnswer = direction === 'left' ? 0 : 1;
+    const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
+
+    this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border";
+
+    // Fjern klassen efter 2 sekunder
+    setTimeout(() => {
+      this.feedbackBorderClass = "";
+    }, 2000);
+  }, 300); // 300ms forsinkelse for at give swipe-animationen tid
+
+  this.checkAnswer(direction);
+},
+
+
     async checkAnswer(direction) {
       const selectedAnswer = direction === 'left' ? 0 : 1;
       this.logAnswer(selectedAnswer);
@@ -249,7 +271,7 @@ export default {
   width: 100%;
 }
 .answer {
-  width: 85%;
+  width: 83%;
   padding: 30px;
   text-align: left;
   cursor: pointer;
@@ -259,7 +281,7 @@ export default {
 .answer.left {
   align-self: flex-end;
   background-color: var(--main-color);
-  clip-path: polygon(3% 0, 100% 0, 100% 100%, 90% 100%, 3% 100%, 0 50%);
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 92% 100%, 10% 100%, 0 50%);
 
 }
 
@@ -269,7 +291,7 @@ export default {
   margin-top: 1rem;
   align-self: flex-start;
   background-color: var(--secondary-color);
-  clip-path: polygon(0% 0, 97% 0, 100% 50%, 97% 100%, 00% 100%, 0 50%);
+  clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, 0 50%);
 }
 .answer.left.swiped {
   transform: translateX(-100%);
@@ -277,4 +299,20 @@ export default {
 .answer.right.swiped {
   transform: translateX(100%);
 }
+
+.correct-border {
+  border: 10px solid green;
+  box-sizing: border-box;
+}
+
+.incorrect-border {
+  border: 10px solid red;
+  box-sizing: border-box;
+}
+
+.correct-border,
+.incorrect-border {
+  transition: border 0.3s ease-in-out;
+}
+
 </style>

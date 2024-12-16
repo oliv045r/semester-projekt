@@ -12,7 +12,7 @@ import QuizResult from './views/QuizResult.vue';
 import ManageSwipe from './views/ManageSwipe.vue';
 import ManageQuiz from './views/ManageQuiz.vue';
 import UserManagement from './views/UserManagement.vue';
-
+import IntroSwipe from './views/IntroSwipe.vue';
 import AdminPanel from './views/AdminPanel.vue';
 
 
@@ -29,6 +29,7 @@ const routes = [
   { path: '/administrer-quiz', component: ManageQuiz, meta: { requiresAuth: true } },
   { path: '/administrer-brugere', component: UserManagement, meta: { requiresAuth: true } },
   { path: '/admin', component: AdminPanel, meta: { requiresAuth: true } },
+  { path: '/intro-swipe', component: IntroSwipe, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
