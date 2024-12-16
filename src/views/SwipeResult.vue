@@ -70,14 +70,13 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #1f1f1f;
   color: white;
   min-height: 100vh; /* Sørg for, at skærmen ikke kollapser */
 }
 
 .results-title {
   font-size: 2rem;
-  color: #f35d0c;
+  color: var--main-color;
   margin-bottom: 10px;
 }
 
