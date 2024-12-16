@@ -6,6 +6,17 @@
       :src="gifUrl || '@/assets/images-feedback/giphy.gif'"
       alt="Feedback GIF"
     >
+
+    <div class="tenor-credit" v-if="gifUrl">
+      <a href="https://tenor.com" target="_blank" rel="noopener noreferrer">
+        <img 
+          src="https://www.gstatic.com/tenor/web/attribution/PB_tenor_logo_grey_horizontal.png" 
+          alt="Tenor logo" 
+          class="tenor-logo"
+        />
+      </a>
+    </div>
+    
     <h2 class="feed-heading">{{ feedbackHeading }}</h2>
     <p class="feed-subheading"><strong>Vidste du at:</strong></p>
     <p class="feed-desc">{{ feedbackDesc }}</p>
@@ -107,5 +118,27 @@ export default {
   margin: 0rem 2rem;
   align-self: flex-start; /* Venstrecentrer teksten */
   font-weight: semibold;
+}
+
+.tenor-credit {
+  margin-top: 0.5rem;
+  text-align: center;
+  width: 90%; /* Sørg for, at det tilpasser sig containeren */
+}
+
+.tenor-credit a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.tenor-logo {
+  height: 20px;
+  vertical-align: middle;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.tenor-logo:hover {
+  opacity: 1;
 }
 </style>

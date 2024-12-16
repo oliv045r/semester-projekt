@@ -1,6 +1,23 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
-    <img class="feed-img" :src="gifUrl || '@/assets/images-feedback/caught-in.gif'" alt="Feedback GIF">
+    <!-- Dynamisk GIF -->
+    <img 
+      class="feed-img" 
+      :src="gifUrl || '@/assets/images-feedback/caught-in.gif'" 
+      alt="Feedback GIF"
+    >
+
+    <!-- Tenor Kreditering -->
+    <div class="tenor-credit" v-if="gifUrl">
+      <a href="https://tenor.com" target="_blank" rel="noopener noreferrer">
+        <img 
+          src="https://www.gstatic.com/tenor/web/attribution/PB_tenor_logo_grey_horizontal.png" 
+          alt="Tenor logo" 
+          class="tenor-logo"
+        />
+      </a>
+    </div>
+
     <h2 class="feed-heading">{{ feedbackHeading }}</h2>
     <p>Vidste du at:</p>
     <p class="feed-desc">{{ feedbackDesc }}</p>
@@ -106,4 +123,25 @@ export default {
   font-weight: semibold;
 }
 
+.tenor-credit {
+  margin-top: 0.5rem;
+  text-align: center;
+  width: 90%; /* Sørg for, at det tilpasser sig containeren */
+}
+
+.tenor-credit a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.tenor-logo {
+  height: 20px;
+  vertical-align: middle;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.tenor-logo:hover {
+  opacity: 1;
+}
 </style>
