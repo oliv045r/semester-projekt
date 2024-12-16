@@ -5,7 +5,7 @@
     :class="{ hidden: isFadingOut }"
   >
     <img
-      src="@/assets/icons/swipe.png"
+      src="@/assets/icons/swipe2.svg"
       alt="Swipe animation"
       class="swipe-icon"
       :class="{
