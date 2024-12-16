@@ -1,65 +1,81 @@
 <template>
-    <div class="swipe-animation">
-      <img
-        src="@/assets/icons/swipe.png"
-        alt="Swipe animation"
-        class="swipe-icon"
-        :class="{
-          animateRight: direction === 'right' && isAnimating,
-          animateLeft: direction === 'left' && isAnimating
-        }"
-      />
-    </div>
-  </template>
-  
-  
-  <script>
-  export default {
-    name: "SwipeAnimation",
-    data() {
-      return {
-        isAnimating: false, // Styr animationstilstanden
-        direction: "right", // Start med at animere til højre
-        isFadingOut: false, // Tilføj fade-out kontrol
-      };
+  <div
+    v-if="isVisible"
+    class="swipe-animation"
+    :class="{ hidden: isFadingOut }"
+  >
+    <img
+      src="@/assets/icons/swipe.png"
+      alt="Swipe animation"
+      class="swipe-icon"
+      :class="{
+        animateRight: direction === 'right' && isAnimating,
+        animateLeft: direction === 'left' && isAnimating
+      }"
+    />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "SwipeAnimation",
+  props: {
+    isVisible: {
+      type: Boolean,
+      default: true, // Styr synligheden af animationen
     },
-    mounted() {
-      this.animateOnce(); // Start animation med det samme
-      this.startAnimation(); // Start intervallet for gentagne animationer
+    autoFadeOut: {
+      type: Boolean,
+      default: false, // Om animationen skal fade ud automatisk
     },
-    methods: {
-      animateOnce() {
-        this.isAnimating = true; // Start animation
+    startDirection: {
+      type: String,
+      default: "right", // Standardretning for animationen
+    },
+  },
+  data() {
+    return {
+      isAnimating: false,
+      direction: this.startDirection,
+      isFadingOut: false,
+    };
+  },
+  mounted() {
+    this.animateOnce(); // Start første animation
+    this.startAnimation(); // Start gentagende animation
+    if (this.autoFadeOut) {
+      this.fadeOut(); // Start automatisk fade-out, hvis aktiveret
+    }
+  },
+  methods: {
+    animateOnce() {
+      this.isAnimating = true;
+      setTimeout(() => {
+        this.isAnimating = false;
+        this.direction = "left"; // Skift retning
+      }, 1000);
+    },
+    startAnimation() {
+      setInterval(() => {
+        this.isAnimating = true;
         setTimeout(() => {
-          this.isAnimating = false; // Stop animation efter 1 sekund
-          this.direction = "left"; // Skift retning efter første animation
-        }, 1000); // Varighed af animation (1 sekund)
-      },
-      startAnimation() {
-        setInterval(() => {
-          this.isAnimating = true; // Start animation
-          setTimeout(() => {
-            this.isAnimating = false; // Stop animation
-            this.direction = this.direction === "right" ? "left" : "right"; // Skift retning
-          }, 1000); // Varighed af animation (1 sekund)
-        }, 2000); // Interval mellem animationer (2 sekunder)
-      },
-      fadeOut() {
-        this.isFadingOut = true; // Start fade-out
-        setTimeout(() => {
-          this.isFadingOut = false; // Stop fade-out (valgfrit, hvis du ønsker at nulstille)
-          this.$emit("hide"); // Emit event til forælderen for at skjule komponenten
-        }, 1000); // Match CSS-transition varighed
-      },
+          this.isAnimating = false;
+          this.direction = this.direction === "right" ? "left" : "right";
+        }, 1000);
+      }, 2000);
     },
-  };
-  </script>
-  
-  
-  
-   
-  
-  <style scoped>
+    fadeOut() {
+      this.isFadingOut = true;
+      setTimeout(() => {
+        this.isFadingOut = false;
+        this.$emit("hide"); // Emit event til forælder, når fade-out er færdig
+      }, 1000);
+    },
+  },
+};
+</script>
+
+<style scoped>
 .swipe-animation {
   position: absolute;
   top: 90%;
@@ -86,7 +102,4 @@
 .hidden {
   opacity: 0; /* Fade ud */
 }
-
-
-  </style>
-  
+</style>

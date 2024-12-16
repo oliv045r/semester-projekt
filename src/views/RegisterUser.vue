@@ -5,8 +5,14 @@
     :showUsername="true"
     @submit="register"
   />
-  <p>Har du allerede en bruger? <router-link style="color: var(--text-color);" to="/log-ind"><strong>Log ind her</strong></router-link></p>
+  <p>
+    Har du allerede en bruger?
+    <router-link class="login-link" to="/log-ind">
+      <strong>Log ind her</strong>
+    </router-link>
+  </p>
 </template>
+
 
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
@@ -59,3 +65,36 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* Tydelig knap uden hover */
+button {
+  display: inline-block;
+  background-color: #ff6600; /* Tydelig orange farve */
+  color: #ffffff; /* Hvid tekst */
+  font-size: 1.2rem; /* Stor, tydelig skrift */
+  font-weight: bold; 
+  text-align: center;
+  border: 2px solid #cc5200; /* Tydelig ramme for at forstærke affordance */
+  border-radius: 6px; /* Let afrundede hjørner */
+  padding: 14px 24px; /* Stor knap med god plads */
+  box-shadow: 0 10px 63px rgba(0, 0, 0, 0.2); /* Dybde via skygge */
+  cursor: pointer; /* Markør indikerer klikbarhed */
+}
+
+/* Fjern hover-effekter */
+button:hover,
+button:focus,
+button:active {
+  background-color: #ff6600; /* Behold samme farve ved interaktion */
+  border-color: #cc5200;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Log ind-link styling */
+.login-link {
+  color: #0066cc;
+  text-decoration: underline;
+  font-weight: bold;
+}
+</style>

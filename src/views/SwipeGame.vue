@@ -302,7 +302,6 @@ export default {
 
 .correct-border {
   border: 10px solid green;
-
   box-sizing: border-box;
 }
 
