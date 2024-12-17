@@ -4,10 +4,10 @@
     <img src="@/assets/icons/SmartChoice.svg" alt="">
     <p>Kan du swipe dig til det grønne valg?</p>
     <div class="btn-container">
-      <router-link to="/opret-bruger">
+      <router-link tabindex="1" to="/opret-bruger">
         <PrimaryButton>Opret Bruger</PrimaryButton>
       </router-link>
-      <router-link to="/log-ind">
+      <router-link  tabindex="2" to="/log-ind">
         <PrimaryButton class="secondary-bg-color">Log ind</PrimaryButton>
       </router-link>
     </div>
@@ -32,6 +32,7 @@ export default {
     flex-direction: column;
     gap: 1rem;
     width: 60vw;
-    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>

@@ -7,7 +7,7 @@
   />
   <p>
     Har du allerede en bruger?
-    <router-link class="login-link" to="/log-ind">
+    <router-link tabindex="10" class="login-link" to="/log-ind">
       <strong>Log ind her</strong>
     </router-link>
   </p>

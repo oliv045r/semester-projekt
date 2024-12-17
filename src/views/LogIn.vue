@@ -5,7 +5,7 @@
     :showStayLoggedIn="true"
     @submit="login"
   />
-  <p>Har du ikke en bruger? <router-link style="color: var(--text-color);" to="/opret-bruger"><strong>Opret her</strong></router-link></p>
+  <p>Har du ikke en bruger? <router-link tabindex="10" class="login-link" to="/opret-bruger"><strong>Opret her</strong></router-link></p>
 </template>
 
 <script>
@@ -54,3 +54,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.login-link {
+  color: #0066cc;
+  text-decoration: underline;
+  font-weight: bold;
+}
+</style>
