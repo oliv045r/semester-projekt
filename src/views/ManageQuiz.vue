@@ -1,100 +1,58 @@
 <template>
   <div class="admin-container">
-    <h2>Administrer Quizspørgsmål</h2>
+    <h2>Administrer Quiz Spørgsmål</h2>
     <div class="level-selector">
-      <label for="level">Vælg level:</label>
-      <select v-model="selectedLevel" @change="fetchQuestions" required>
-        <option value="1">Level 1</option>
-        <option value="2">Level 2</option>
-        <option value="3">Level 3</option>
-        <option value="4">Level 4</option>
-        <option value="5">Level 5</option>
+      <label for="level">Vælg niveau:</label>
+      <select id="level" v-model="selectedLevel" @change="fetchQuestions">
+        <option v-for="level in levels" :key="level" :value="level">{{ level }}</option>
       </select>
     </div>
-    <button @click="showAddForm = !showAddForm" class="add-button">
-      {{ showAddForm ? 'Annuller' : 'Tilføj Quizspørgsmål' }}
-    </button>
-    <div v-if="showAddForm" class="add-question-container">
-      <h3>Tilføj Quizspørgsmål</h3>
-      <form @submit.prevent="addQuestion">
-        <div class="form-group">
-          <label for="questionText">Spørgsmålstekst:</label>
-          <input type="text" id="questionText" v-model="newQuestion.questionText" required />
-        </div>
-        <div class="answer-section" v-for="(answer, index) in newQuestion.answers" :key="index">
-          <h4>Svar {{ index + 1 }}</h4>
-          <div class="form-group">
-            <label :for="'answer' + index">Tekst:</label>
-            <input :id="'answer' + index" type="text" v-model="answer.text" required />
-          </div>
-          <div class="form-group checkbox-group">
-            <label :for="'isCorrect' + index">Er Korrekt:</label>
-            <input :id="'isCorrect' + index" type="checkbox" v-model="answer.isCorrect" />
-          </div>
-        </div>
-        <button type="submit" class="add-button">Tilføj Spørgsmål</button>
-      </form>
+    <button @click="showModal = true" class="add-button">Tilføj Quiz Spørgsmål</button>
+    <QuestionModal
+      :isVisible="showModal"
+      modalTitle="Tilføj Quiz Spørgsmål"
+      :showFeedback="false"
+      :addQuestion="addQuestion"
+      :closeModal="closeModal"
+      :openGifModal="openGifModal"
+    />
+    <div v-if="questions.length > 0">
+      <QuestionAccordion
+        v-for="(question, index) in questions"
+        :key="question.id"
+        :question="question"
+        :index="index"
+        :isActive="activeIndex === index"
+        :showFeedback="false"
+        :toggleAccordion="toggleAccordion"
+        :updateQuestion="updateQuestion"
+        :deleteQuestion="deleteQuestion"
+        :openGifModal="openGifModal"
+      />
     </div>
     <div v-else>
-      <h3>Spørgsmål for Niveau {{ selectedLevel }}</h3>
-      <div v-if="questions.length > 0">
-        <div v-for="(question, index) in questions" :key="question.id" class="accordion-item">
-          <div class="accordion-header" @click="toggleAccordion(index)">
-            <p>{{ question.questionText }}</p>
-            <span>{{ activeIndex === index ? '-' : '+' }}</span>
-          </div>
-          <div v-if="activeIndex === index" class="accordion-content">
-            <form @submit.prevent="updateQuestion(question.id)">
-              <div class="form-group">
-                <label for="questionText">Spørgsmålstekst:</label>
-                <input type="text" v-model="question.questionText" required />
-              </div>
-              <div
-                class="answer-section"
-                v-for="(answer, index) in question.answers"
-                :key="index"
-              >
-                <h4>Svar {{ index + 1 }}</h4>
-                <div class="form-group">
-                  <label :for="'answer' + index">Tekst:</label>
-                  <input :id="'answer' + index" type="text" v-model="answer.text" required />
-                </div>
-                <div class="form-group checkbox-group">
-                  <label :for="'isCorrect' + index">Er Korrekt:</label>
-                  <input :id="'isCorrect' + index" type="checkbox" v-model="answer.isCorrect" />
-                </div>
-              </div>
-              <div class="button-group">
-                <button type="submit" class="update-button">Opdater Spørgsmål</button>
-                <button
-                  type="button"
-                  class="delete-button"
-                  @click="deleteQuestion(question.id)"
-                >
-                  Slet Spørgsmål
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-        <p>Ingen spørgsmål fundet for dette niveau.</p>
-      </div>
+      <p>Ingen spørgsmål fundet for dette niveau.</p>
     </div>
+    <GifModal :isVisible="gifModalVisible" @close="closeGifModal" @select="selectGif" />
   </div>
 </template>
 
 <script>
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, setDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
+import QuestionAccordion from '@/components/admin/QuestionAccordion.vue';
+import QuestionModal from '@/components/admin/QuestionModal.vue';
+import GifModal from '@/components/elements/GifModal.vue';
 
 export default {
   name: 'ManageQuiz',
+  components: { QuestionAccordion, QuestionModal, GifModal },
   data() {
     return {
       selectedLevel: 1,
-      showAddForm: false,
+      levels: [1, 2, 3, 4, 5], // Define the levels
+      showModal: false,
+      gifModalVisible: false,
       questions: [],
       activeIndex: null,
       newQuestion: {
@@ -128,7 +86,7 @@ export default {
         });
         this.fetchQuestions();
         this.resetForm();
-        this.showAddForm = false;
+        this.showModal = false;
       } catch (error) {
         console.error("Error adding question:", error);
       }
@@ -152,6 +110,19 @@ export default {
     },
     toggleAccordion(index) {
       this.activeIndex = this.activeIndex === index ? null : index;
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    openGifModal() {
+      this.gifModalVisible = true;
+    },
+    closeGifModal() {
+      this.gifModalVisible = false;
+    },
+    selectGif() {
+      // Handle the selected GIF URL
+      this.gifModalVisible = false;
     },
     resetForm() {
       this.newQuestion = {
