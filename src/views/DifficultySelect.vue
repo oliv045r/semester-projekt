@@ -105,7 +105,7 @@ h2{
   font-size: 20px;
   font-weight: 600;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #949494;
+  background-color: var(--background-difficulty-button);
 }
 
 .swipe-active {

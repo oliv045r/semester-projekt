@@ -42,6 +42,7 @@ export default {
     text-transform: uppercase;
     letter-spacing: 2px;
     text-align: center;
+    color: var(--text-color);
 }
 
 /* Buttons Container */
@@ -57,8 +58,8 @@ export default {
 .admin-button {
     padding: 15px 30px;
     font-size: 1.2rem;
-    color: white;
-    background: linear-gradient(135deg, #2d8bd9, #1a6cab);
+    color: var(--text-color);
+    background: var(--main-color);
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -71,7 +72,7 @@ export default {
 
 /* Hover Effekt */
 .admin-button:hover {
-    background: linear-gradient(135deg, #1a6cab, #2d8bd9);
+    background: var(--hover-main-color);
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }

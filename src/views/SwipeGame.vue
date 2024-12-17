@@ -257,6 +257,7 @@ export default {
   font-size: 22px;
   text-align: left;
   font-weight: normal;
+  color: var(--text-color);
 }
 
 .answers {
@@ -264,6 +265,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  color: var(--text-color);
 }
 
 .answer {

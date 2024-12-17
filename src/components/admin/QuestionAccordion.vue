@@ -44,8 +44,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #0056a6;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--text-color);
   border-radius: 25px;
   margin-bottom: 10px;
   padding: 10px 20px;
@@ -67,12 +67,12 @@ export default {
 .icon-button {
   background: none;
   border: none;
-  color: white;
+  color: var(--text-color);
   cursor: pointer;
   font-size: 1.2em;
 }
 
 .icon-button:hover {
-  color: #ccc;
+  color: var(--text-color);
 }
 </style>

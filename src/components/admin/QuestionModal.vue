@@ -129,7 +129,6 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,7 +136,7 @@ export default {
 }
 
 .modal-content {
-  background-color: #323232;
+  background-color: var(--background-color);
   padding: 20px;
   border-radius: 15px;
   width: 500px;
@@ -181,7 +180,7 @@ export default {
 }
 
 .add-button {
-  background-color: #007bff;
+  background-color: var(--main-color);
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -190,7 +189,7 @@ export default {
 }
 
 .add-button:hover {
-  background-color: #0056b3;
+  background-color: var(--main-color);
 }
 
 .accordion-header {
@@ -199,15 +198,15 @@ export default {
   align-items: center;
   cursor: pointer;
   padding: 10px;
-  background-color: #444;
-  color: #fff;
+  background-color: var(--background-color);
+  color: var(--text-color);
   border-radius: 5px;
   margin-bottom: 5px;
 }
 
 .accordion-content {
   padding: 10px;
-  background-color: #555;
+  background-color: var(--background-color);
   border-radius: 5px;
 }
 </style>
