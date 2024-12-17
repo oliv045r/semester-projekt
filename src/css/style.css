@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: #323232;
+    background-color: var(--background-color);
     font-family: 'Poppins', sans-serif;
     width: 100vw !important;
     height: 100vh !important;
@@ -34,3 +34,16 @@ body {
 .split-bg-color {
     background: linear-gradient(to right, var(--main-color) 50%, var(--secondary-color) 50%);
 }
+
+[data-theme="colorblind"] {
+    --background-color: #ffffff; /* Mørk baggrund for høj kontrast */
+    --text-color: black; /* Ren hvid tekst */
+    --main-color: #33bbee; /* Højkontrast blå */
+    --secondary-color: #ee7733; /* Gennemført lys orange */
+    --hover-main-color: #135BA0; /* Mørkere blå til hover */
+    --hover-secondary-color: #E68900; /* Mørkere orange til hover */
+    --background-difficulty-button: #BBBBBB; /* Mellemgrå for neutral baggrund */
+    --check-mark-color: #156723; /* Lys grøn med høj kontrast */
+    --minus-mark-color: #ee3377; /* Klar rød med bedre kontrast */
+  }
+  

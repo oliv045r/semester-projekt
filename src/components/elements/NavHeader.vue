@@ -10,6 +10,7 @@
                 <li><router-link to="/">Forside</router-link></li>
                 <li><router-link to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
                 <li><router-link to="/admin">Admin</router-link></li>
+                <li><router-link to="/user-settings">Indstillinger</router-link></li>
                 <li><button class="signOutButton" @click="signOut">Log ud</button></li>
             </ul>
             <button 

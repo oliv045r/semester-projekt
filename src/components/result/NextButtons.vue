@@ -53,21 +53,25 @@ export default {
 .retry-button {
   background-color: var(--main-color);
   clip-path: polygon(0% 0, 93% 0, 100% 50%, 93% 100%, 0% 100%, 0% 50%);
+  color: var(--text-color);
 }
 
 .retry-button:hover {
   background-color: var(--hover-main-color);
   transform: translateY(-2px); /* Løft knappen lidt */
+  color: var(--text-color);
 }
 
 /* Next Button */
 .next-button {
   background-color: var(--secondary-color);
   clip-path: polygon(100% 0, 7% 0, 0 50%, 7% 100%, 100% 100%, 100% 50%);
+  color: var(--text-color);
 }
 
 .next-button:hover {
   background-color: var(hover-secondary-color);
   transform: translateY(-2px); /* Løft knappen lidt */
+  color: var(--text-color);
 }
 </style>
