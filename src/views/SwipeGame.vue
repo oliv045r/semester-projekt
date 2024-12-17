@@ -7,10 +7,10 @@
       <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
-      <div class="answer left" v-gesture="handleSwipe" :class="{ swiped: swipedLeft }">
+      <div class="answer left" v-gesture="handleSwipe" :class="{ swiped: swipedLeft }" @click="handleClick('left')">
         {{ currentQuestion.answers[0].text }}
       </div>
-      <div class="answer right" v-gesture="handleSwipe" :class="{ swiped: swipedRight }">
+      <div class="answer right" v-gesture="handleSwipe" :class="{ swiped: swipedRight }" @click="handleClick('right')">
         {{ currentQuestion.answers[1].text }}
       </div>
     </div>
@@ -127,6 +127,20 @@ export default {
       }, 300); // 300ms forsinkelse for at give swipe-animationen tid
 
       this.checkAnswer(direction);
+    },
+
+    handleClick(direction) {
+      if (direction === 'left') {
+        this.swipedLeft = true;
+        this.showFeedbackLeft = true;
+        this.showFeedbackRight = false;
+        this.handleSwipe({ direction: 'left' });
+      } else if (direction === 'right') {
+        this.swipedRight = true;
+        this.showFeedbackRight = true;
+        this.showFeedbackLeft = false;
+        this.handleSwipe({ direction: 'right' });
+      }
     },
 
     async checkAnswer(direction) {
