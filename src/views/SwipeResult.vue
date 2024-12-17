@@ -70,7 +70,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-color);
   min-height: 100vh; /* Sørg for, at skærmen ikke kollapser */
 }
 
@@ -78,6 +78,7 @@ export default {
   font-size: 2rem;
   color: var--main-color;
   margin-bottom: 10px;
+  color: var(--text-color);
 }
 
 .level-completed {

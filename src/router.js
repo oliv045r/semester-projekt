@@ -14,6 +14,7 @@ import ManageQuiz from './views/ManageQuiz.vue';
 import UserManagement from './views/UserManagement.vue';
 import IntroSwipe from './views/IntroSwipe.vue';
 import AdminPanel from './views/AdminPanel.vue';
+import UserSettings from '@/views/UserSettings.vue';
 
 
 const routes = [
@@ -30,6 +31,7 @@ const routes = [
   { path: '/administrer-brugere', component: UserManagement, meta: { requiresAuth: true } },
   { path: '/admin', component: AdminPanel, meta: { requiresAuth: true } },
   { path: '/intro-swipe', component: IntroSwipe, meta: { requiresAuth: true } },
+  { path: '/user-settings', component: UserSettings, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
