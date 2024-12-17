@@ -3,21 +3,21 @@
     <h2>{{ title }}</h2>
     <form @submit.prevent="handleSubmit">
       <div>
-        <input placeholder="E-mail" type="email" v-model="email" required />
+        <input tabindex="1" placeholder="E-mail" type="email" v-model="email" required />
       </div>
       <div>
-        <input placeholder="Adgangskode" type="password" v-model="password" required />
+        <input tabindex="2" placeholder="Adgangskode" type="password" v-model="password" required />
       </div>
       <div v-if="showUsername">
-        <input placeholder="Brugernavn" type="text" v-model="username" required />
+        <input tabindex="3" placeholder="Brugernavn" type="text" v-model="username" required />
       </div>
       <div class="stay-logged" v-if="showStayLoggedIn">
-        <input type="checkbox" v-model="stayLoggedIn" />
+        <input tabindex="4" type="checkbox" v-model="stayLoggedIn" />
         <label>
           Forbliv logget ind
         </label>
       </div>
-      <button class="form-btn" type="submit">{{ buttonText }}</button>
+      <button tabindex="5" class="form-btn" type="submit">{{ buttonText }}</button>
     </form>
   </div>
 </template>

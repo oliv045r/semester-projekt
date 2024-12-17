@@ -1,19 +1,21 @@
 <template>
     <header class="nav-header">
-        <div class="logo">
-            <router-link to="/">
-                <img src="@/assets/icons/smart-choice-small.svg" alt="Smart Choice Logo">
+        <div tabindex="-1" class="logo">
+            <router-link tabindex="100" to="/">
+                <img tabindex="-1" src="@/assets/icons/smart-choice-small.svg" alt="Smart Choice Logo">
             </router-link>
         </div>
         <nav>
-            <ul :class="{ 'nav-open': isNavOpen }" class="nav-links" @click="closeNav">
-                <li><router-link to="/">Forside</router-link></li>
-                <li><router-link to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
-                <li><router-link to="/admin">Admin</router-link></li>
+
+            <ul tabindex="-1" :class="{ 'nav-open': isNavOpen }" class="nav-links" @click="closeNav">
+                <li><router-link tabindex="102" to="/">Forside</router-link></li>
+                <li><router-link tabindex="103" to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
+                <li><router-link tabindex="104" to="/admin">Admin</router-link></li>
                 <li><router-link to="/user-settings">Indstillinger</router-link></li>
-                <li><button class="signOutButton" @click="signOut">Log ud</button></li>
+                <li><button tabindex="105" class="signOutButton" @click="signOut">Log ud</button></li>
             </ul>
-            <button 
+            <button
+                tabindex="101" 
                 class="burger" 
                 @click="toggleNav" 
                 :aria-expanded="isNavOpen.toString()" 
@@ -29,7 +31,7 @@
 
 
 <script>
-import { signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";    
 import { auth } from "@/firebase/firebaseConfig";
 
 export default {
