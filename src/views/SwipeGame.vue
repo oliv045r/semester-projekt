@@ -7,10 +7,10 @@
       <p>{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
-      <div class="answer left" v-gesture="handleSwipe" :class="{ swiped: swipedLeft }">
+      <div class="answer left" v-gesture="handleSwipe" :class="{ swiped: swipedLeft }" @click="handleClick('left')">
         {{ currentQuestion.answers[0].text }}
       </div>
-      <div class="answer right" v-gesture="handleSwipe" :class="{ swiped: swipedRight }">
+      <div class="answer right" v-gesture="handleSwipe" :class="{ swiped: swipedRight }" @click="handleClick('right')">
         {{ currentQuestion.answers[1].text }}
       </div>
     </div>
@@ -129,6 +129,20 @@ export default {
       this.checkAnswer(direction);
     },
 
+    handleClick(direction) {
+      if (direction === 'left') {
+        this.swipedLeft = true;
+        this.showFeedbackLeft = true;
+        this.showFeedbackRight = false;
+        this.handleSwipe({ direction: 'left' });
+      } else if (direction === 'right') {
+        this.swipedRight = true;
+        this.showFeedbackRight = true;
+        this.showFeedbackLeft = false;
+        this.handleSwipe({ direction: 'right' });
+      }
+    },
+
     async checkAnswer(direction) {
       const selectedAnswer = direction === 'left' ? 0 : 1;
       this.logAnswer(selectedAnswer);
@@ -243,6 +257,7 @@ export default {
   font-size: 22px;
   text-align: left;
   font-weight: normal;
+  color: var(--text-color);
 }
 
 .answers {
@@ -250,6 +265,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  color: var(--text-color);
 }
 
 .answer {

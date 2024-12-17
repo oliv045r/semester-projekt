@@ -90,7 +90,7 @@ export default {
   width: 100%;
   display: inline-block;
   background-color: var(--secondary-color); /* Blue color */
-  color: #fff; /* White text */
+  color: var(--text-color); /* White color */
   font-size: 18px; /* Adjust as needed */
   font-weight: bold;
   text-align: center;

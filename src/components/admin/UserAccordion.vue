@@ -36,8 +36,8 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #0056a6;
-    color: white;
+    background-color: var(--main-color);
+    color: var(--text-color);
     border-radius: 25px;
     margin-bottom: 10px;
     padding: 10px 20px;
@@ -51,14 +51,14 @@ export default {
   justify-content: space-between;
   padding: 1rem;
   cursor: pointer;
-  color: white;
+  color: var(--text-color);
   width: 100%;
 
 }
 
 .accordion-content {
   padding-bottom: 0.5rem;
-  color: white;
+  color: var(--text-color);
   justify-content: start;
 }
 
@@ -69,7 +69,7 @@ text-align: left;
 button {
   padding: 10px 20px;
   background-color: var(--secondary-color);
-  color: white;
+  color: var(--text-color);
   border: none;
   cursor: pointer;
   margin-right: 10px;

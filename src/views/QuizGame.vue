@@ -190,11 +190,11 @@ export default {
 }
 
 .answer.correct {
-  background-color: green;
+  background-color: var(--check-mark-color);
 }
 
 .answer.incorrect {
-  background-color: red;
+  background-color: var(--minus-mark-color)
 }
 
 button {
