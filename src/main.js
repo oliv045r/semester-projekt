@@ -5,6 +5,8 @@ import router from './router';
 import './css/style.css'; // Import the global CSS file
 import vGesture from './directives/v-gesture';
 import { auth } from '@/firebase/firebaseConfig';
+import '@fortawesome/fontawesome-free/css/all.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 
 let appMounted = false;
 
