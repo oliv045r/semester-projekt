@@ -7,32 +7,35 @@
         <option v-for="level in levels" :key="level" :value="level">{{ level }}</option>
       </select>
     </div>
-    <button @click="openAddQuestionModal" class="add-button">Tilføj Swipe Spørgsmål</button>
     <QuestionModal
-      :isVisible="showModal"
-      :question="editingQuestion"
-      modalTitle="Tilføj Swipe Spørgsmål"
-      :showFeedback="true"
-      :addQuestion="addQuestion"
+    :isVisible="showModal"
+    :question="editingQuestion"
+    modalTitle="Tilføj Swipe Spørgsmål"
+    :showFeedback="true"
+    :addQuestion="addQuestion"
+      :updateQuestion="updateQuestion"
       :closeModal="closeModal"
     />
     <div class="questions-container" v-if="questions.length > 0">
       <QuestionAccordion
-        v-for="(question, index) in questions"
-        :key="question.id"
-        :question="question"
-        :index="index"
-        :isActive="activeIndex === index"
-        :showFeedback="true"
-        :toggleAccordion="toggleAccordion"
-        :updateQuestion="updateQuestion"
-        :deleteQuestion="deleteQuestion"
-        :openGifModal="openGifModal"
+      v-for="(question, index) in questions"
+      :key="question.id"
+      :question="question"
+      :index="index"
+      :isActive="activeIndex === index"
+      :showFeedback="true"
+      :toggleAccordion="toggleAccordion"
+      :deleteQuestion="deleteQuestion"
+      :openGifModal="openGifModal"
+      :openEditModal="openEditQuestionModal"
       />
     </div>
     <div v-else>
       <p>Ingen spørgsmål fundet for dette niveau.</p>
     </div>
+    <button @click="openAddQuestionModal" class="add-button">
+      <i class="fas fa-plus"></i>
+    </button>
     <GifModal :isVisible="gifModalVisible" @close="closeGifModal" @select="selectGif" />
   </div>
 </template>
@@ -120,6 +123,10 @@ export default {
       this.editingQuestion = null;
       this.showModal = true;
     },
+    openEditQuestionModal(question) {
+      this.editingQuestion = question;
+      this.showModal = true;
+    },
     closeModal() {
       this.showModal = false;
       this.editingQuestion = null;
@@ -199,5 +206,19 @@ body {
   width: 100%;
   height: 33.8rem;
   overflow-x: hidden;
+}
+
+.add-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fa-plus {
+  margin-top: 3px;
+  font-size: 25px;
+  color: black;
 }
 </style>

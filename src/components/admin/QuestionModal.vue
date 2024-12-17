@@ -139,9 +139,9 @@ export default {
 .modal-content {
   background-color: #323232;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 15px;
   width: 500px;
-  max-width: 90%;
+  max-width: 80%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }
@@ -177,6 +177,7 @@ export default {
 
 .checkbox-group label {
   margin-right: 10px;
+  width: 10rem;
 }
 
 .add-button {
