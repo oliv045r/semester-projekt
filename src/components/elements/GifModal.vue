@@ -82,7 +82,6 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,7 +89,7 @@
   }
   
   .modal-content {
-    background: white;
+    background: var(--text-color);
     padding: 20px;
     border-radius: 8px;
     max-width: 500px;
@@ -127,7 +126,6 @@
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    color: #555;
     font-size: 12px;
   }
   
@@ -140,8 +138,8 @@
   .close-button {
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: #f35d0c;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     border: none;
     border-radius: 4px;
     cursor: pointer;

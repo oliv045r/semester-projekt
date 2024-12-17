@@ -1,23 +1,11 @@
 <template>
     <div>
-        <transition-group
-            name="fade"
-            tag="div"
-            class="results-list"
-            @before-enter="onItemEnter"
-        >
-            <div
-                v-for="(question, index) in answeredQuestions"
-                :key="index"
-                class="result-item"
-                :style="{ animationDelay: `${index * 0.2}s` }"
-            >
+        <transition-group name="fade" tag="div" class="results-list" @before-enter="onItemEnter">
+            <div v-for="(question, index) in answeredQuestions" :key="index" class="result-item"
+                :style="{ animationDelay: `${index * 0.2}s` }">
                 <div class="result-header">
                     <p class="question-label">Spørgsmål {{ index + 1 }}</p>
-                    <span
-                        class="result-status"
-                        :class="{ correct: question.isCorrect, wrong: !question.isCorrect }"
-                    >
+                    <span class="result-status" :class="{ correct: question.isCorrect, wrong: !question.isCorrect }">
                         {{ question.isCorrect ? '✔' : '✖' }}
                     </span>
                 </div>
@@ -25,10 +13,7 @@
         </transition-group>
 
         <transition name="fade">
-            <div
-                v-if="allItemsAnimated"
-                class="final-score-container"
-            >
+            <div v-if="allItemsAnimated" class="final-score-container">
                 <p class="final-score">
                     Du fik {{ correctAnswers }}/{{ totalQuestions }} spørgsmål rigtige.
                 </p>
@@ -72,26 +57,33 @@ export default {
 .results-list {
     width: 87%;
     max-width: 500px;
-    left: 10px;
+    margin: 0 auto; /* Centrerer containeren horisontalt */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center; /* Centrerer indholdet vertikalt */
+    align-items: center; /* Centrerer indholdet horisontalt */
 }
 
 .result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0056a6;
-    color: white;
+    background-color: var(--main-color);
+    color: var(text-color);
     border-radius: 25px;
     margin-bottom: 10px;
     padding: 10px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     width: 100%;
     height: auto;
-    opacity: 0; /* Start helt usynlig */
-    animation: fade-in 0.5s ease-out forwards; /* Fade-in animation */
+    opacity: 0;
+    /* Start helt usynlig */
+    animation: fade-in 0.5s ease-out forwards;
+    /* Fade-in animation */
+}
+
+p {
+    color: var(--text-color);
 }
 
 /* Fade-in animation */
@@ -100,6 +92,7 @@ export default {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -121,11 +114,11 @@ export default {
 }
 
 .correct {
-    color: #28a745;
+    color: var(--check-mark-color);
 }
 
 .wrong {
-    color: #dc3545;
+    color: var(--minus-mark-color);
 }
 
 .final-score-container {
@@ -141,7 +134,4 @@ export default {
     font-size: 1rem;
     margin: 10px 0 20px 0;
 }
-
 </style>
-
-

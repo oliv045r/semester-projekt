@@ -70,8 +70,8 @@ export default {
 /* Tydelig knap uden hover */
 button {
   display: inline-block;
-  background-color: #ff6600; /* Tydelig orange farve */
-  color: #ffffff; /* Hvid tekst */
+  background-color: var(--secondary-color); /* Sekundær farve */
+  color: var(--text-color);/* Hvid tekst */
   font-size: 1.2rem; /* Stor, tydelig skrift */
   font-weight: bold; 
   text-align: center;
@@ -86,15 +86,19 @@ button {
 button:hover,
 button:focus,
 button:active {
-  background-color: #ff6600; /* Behold samme farve ved interaktion */
+  background-color: var(--secondary-color); /* Behold samme farve ved interaktion */
   border-color: #cc5200;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* Log ind-link styling */
 .login-link {
-  color: #0066cc;
+  color: var(--main-color);
   text-decoration: underline;
   font-weight: bold;
+}
+
+p {
+  color: var(--text-color);
 }
 </style>

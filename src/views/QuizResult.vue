@@ -71,12 +71,11 @@ export default {
   justify-content: center;
   height: 100vh;
   width: 100vw;
-  background-color: #1f1f1f;
-  color: white;
+  color: var(--text-color);
 }
 
 h2 {
-  color: #f35d0c;
+  color: var(--secondary-color);
 }
 
 p {

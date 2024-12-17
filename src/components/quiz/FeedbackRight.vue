@@ -58,6 +58,7 @@ export default {
   right: 100%;
   width: 100%;
   height: 100%;
+  color: var(--text-color);
   background-color: var(--secondary-color);
   display: flex;
   flex-direction: column;
@@ -93,7 +94,7 @@ export default {
   width: 100%;
   display: inline-block;
   background-color: var(--main-color);
-  color: #fff;
+  color: var(--text-color);
   font-size: 18px;
   font-weight: bold;
   text-align: center;

@@ -15,10 +15,15 @@ body {
 }
 
 :root {
-    --background-color: #525252;
+    --background-color: #323232;
     --text-color: #fff;
     --main-color: #2D8BD9;
     --secondary-color: #F35D0C;
+    --hover-main-color:#1d5f95;
+    --hover-secondary-color:#ab4711;
+    --background-difficulty-button: #949494;
+    --check-mark-color: green;
+    --minus-mark-color: RED;
   }
 
 

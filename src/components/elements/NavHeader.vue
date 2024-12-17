@@ -76,13 +76,14 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: #222;
-    color: #fff;
+    background-color: var(--background-color);
+    color: var(--text-color);
     width: 95%; /* Fylder hele skærmens bredde */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     position: fixed; /* Fastgjort øverst */
     top: 0;
     left: 0;
+    color: var(--text-color);
     z-index: 1000;
 }
 
@@ -115,7 +116,7 @@ export default {
     display: block;
     width: 100%;
     height: 3px;
-    background-color: #fff;
+    background-color: var(--text-color);
     border-radius: 3px;
     transition: all 0.3s ease-in-out;
 }
@@ -139,7 +140,7 @@ export default {
     top: 100%; /* Placeret lige under headeren */
     right: 0;
     left: 0; /* Sørger for, at menuen strækker sig fra kant til kant */
-    background-color: #222;
+    background-color: var(--background-color);
     flex-direction: column;
     width: 100%; /* Fylder hele skærmens bredde */
     max-width: 400px; /* Begrænset bredde på små skærme */
@@ -147,6 +148,7 @@ export default {
     height: 0;
     list-style: none;
     overflow: hidden;
+    color: var(--text-color);
     opacity: 0;
     transform: translateY(-10px);
     border-radius: 5px;
@@ -170,16 +172,11 @@ export default {
 
 .nav-links a, .nav-links button {
     text-decoration: none;
-    color: #fff;
+    color: var(--text-color);
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 3px;
     transition: background-color 0.2s ease-in-out;
-}
-
-.nav-links a:hover, .nav-links button:hover {
-    background-color: #444;
-    color: #fff;
 }
 
 .signOutButton {
