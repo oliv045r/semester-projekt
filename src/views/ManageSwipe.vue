@@ -7,28 +7,12 @@
         <option v-for="level in levels" :key="level" :value="level">{{ level }}</option>
       </select>
     </div>
-    <QuestionModal
-    :isVisible="showModal"
-    :question="editingQuestion"
-    modalTitle="Tilføj Swipe Spørgsmål"
-    :showFeedback="true"
-    :addQuestion="addQuestion"
-      :updateQuestion="updateQuestion"
-      :closeModal="closeModal"
-    />
+    <QuestionModal :isVisible="showModal" :question="editingQuestion" modalTitle="Tilføj Swipe Spørgsmål"
+      :showFeedback="true" :addQuestion="addQuestion" :updateQuestion="updateQuestion" :closeModal="closeModal" />
     <div class="questions-container" v-if="questions.length > 0">
-      <QuestionAccordion
-      v-for="(question, index) in questions"
-      :key="question.id"
-      :question="question"
-      :index="index"
-      :isActive="activeIndex === index"
-      :showFeedback="true"
-      :toggleAccordion="toggleAccordion"
-      :deleteQuestion="deleteQuestion"
-      :openGifModal="openGifModal"
-      :openEditModal="openEditQuestionModal"
-      />
+      <QuestionAccordion v-for="(question, index) in questions" :key="question.id" :question="question" :index="index"
+        :isActive="activeIndex === index" :showFeedback="true" :toggleAccordion="toggleAccordion"
+        :deleteQuestion="deleteQuestion" :openGifModal="openGifModal" :openEditModal="openEditQuestionModal" />
     </div>
     <div v-else>
       <p>Ingen spørgsmål fundet for dette niveau.</p>
@@ -62,8 +46,8 @@ export default {
       newQuestion: {
         questionText: '',
         answers: [
-          { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false },
-          { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false }
+          { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
+          { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false }
         ]
       },
       editingQuestion: null // Track the question being edited
@@ -139,12 +123,14 @@ export default {
     closeGifModal() {
       this.gifModalVisible = false;
     },
-    selectGif(url) {
+    selectGif({ url, altTag }) {
       if (this.gifModalIndex !== null) {
         if (this.editingQuestion) {
           this.editingQuestion.answers[this.gifModalIndex].gifUrl = url;
+          this.editingQuestion.answers[this.gifModalIndex].gifAlt = altTag; // Gem ALT-tagget
         } else {
           this.newQuestion.answers[this.gifModalIndex].gifUrl = url;
+          this.newQuestion.answers[this.gifModalIndex].gifAlt = altTag; // Gem ALT-tagget
         }
       }
       this.gifModalVisible = false;
@@ -153,8 +139,8 @@ export default {
       this.newQuestion = {
         questionText: '',
         answers: [
-          { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false },
-          { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false }
+          { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
+          { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false }
         ]
       };
     }
