@@ -7,8 +7,8 @@
       <router-link tabindex="1" to="/opret-bruger" aria-label="Opret Bruger">
         <PrimaryButton>Opret Bruger</PrimaryButton>
       </router-link>
-      <router-link  tabindex="2" to="/log-ind" aria-label="Log ind">
-        <PrimaryButton class="secondary-bg-color">Log ind</PrimaryButton>
+      <router-link tabindex="2" to="/log-ind" aria-label="Log ind">
+        <PrimaryButton :secondary="true">Log ind</PrimaryButton>
       </router-link>
     </div>
   </div>

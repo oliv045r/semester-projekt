@@ -24,6 +24,7 @@ body {
     --background-difficulty-button: #949494;
     --check-mark-color: green;
     --minus-mark-color: RED;
+    --dark-background-color:black;
   }
 
 
@@ -45,5 +46,6 @@ body {
     --background-difficulty-button: #BBBBBB; /* Mellemgrå for neutral baggrund */
     --check-mark-color: #156723; /* Lys grøn med høj kontrast */
     --minus-mark-color: #ee3377; /* Klar rød med bedre kontrast */
+    --dark-background-color:rgb(196, 196, 196);
   }
   
