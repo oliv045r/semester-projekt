@@ -37,6 +37,7 @@
   import axios from "axios";
   
   export default {
+    name: 'GifModal',
     props: {
       isVisible: {
         type: Boolean,

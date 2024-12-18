@@ -202,30 +202,34 @@ export default {
          }
       },
       async nextQuestion() {
+      // Nulstil swipe- og feedback-tilstande
          this.swipedLeft = false;
          this.swipedRight = false;
          this.showFeedbackLeft = false;
          this.showFeedbackRight = false;
-
+      // Tjek om der er flere spørgsmål tilbage
          if (this.currentQuestionIndex < this.questions.length - 1) {
+      // Gå til næste spørgsmål
             this.currentQuestionIndex++;
             this.checkForSwipeAnimation(); // Opdater animation baseret på næste spørgsmål
          } else {
-            const level = this.$route.params.level; // Get the level from the route parameters
+      // Hent niveau og brugeroplysninger
+            const level = this.$route.params.level;
             const user = auth.currentUser;
             const progressRef = collection(db, `users/${user.uid}/progress`);
             const q = query(progressRef, where("quizId", "==", `SwipeQuestions${level}`));
             const querySnapshot = await getDocs(q);
+      // Beregn korrekt besvarede spørgsmål
             const correctAnswers = querySnapshot.docs.filter((doc) => doc.data().isCorrect).length;
             const totalAnswers = querySnapshot.docs.length;
             const percentage = (correctAnswers / totalAnswers) * 100;
-
+      // Opdater brugerens maksimale quizniveau, hvis procentdelen er over 75%
             if (percentage > 75) {
                const userDocRef = doc(db, `users/${user.uid}`);
                const userDoc = await getDoc(userDocRef);
                const userData = userDoc.data();
                const maxQuizLevel = userData.maxQuizLevel || 0;
-
+      // Opdater maxQuizLevel baseret på det aktuelle niveau
                if (level == 1) {
                   await updateDoc(userDocRef, {
                      maxQuizLevel: Math.max(maxQuizLevel, 1),
@@ -249,7 +253,7 @@ export default {
                }
             }
 
-            this.$router.push({ name: "SwipeResult", params: { level } }); // Navigate to SwipeResult with level
+            this.$router.push({ name: "SwipeResult", params: { level } }); // Gå til resultat med level
          }
       },
    },
