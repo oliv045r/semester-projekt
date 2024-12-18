@@ -2,10 +2,10 @@
   <div class="feedback-container" :class="{ visible: isVisible }">
     <!-- Dynamisk GIF-url med fallback -->
     <img
-    tabindex="-1"
+      tabindex="-1"
       class="feed-img"
       :src="gifUrl || '@/assets/images-feedback/giphy.gif'"
-      alt="Feedback GIF"
+      :alt="gifAlt || 'Feedback GIF'"
     >
 
     <div tabindex="-1" class="tenor-credit" v-if="gifUrl">
@@ -46,7 +46,11 @@ export default {
     },
     gifUrl: {
       type: String,
-      default: null // Standardværdi, hvis gifUrl ikke er tilgængelig
+      default: null
+    },
+    gifAlt: { // Ny prop til ALT-tag
+      type: String,
+      default: 'Feedback GIF'
     }
   }
 };

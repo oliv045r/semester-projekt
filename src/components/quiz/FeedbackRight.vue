@@ -1,11 +1,11 @@
 <template>
   <div class="feedback-container" :class="{ visible: isVisible }">
-    <!-- Dynamisk GIF -->
+    <!-- Dynamisk GIF med ALT-tag -->
     <img 
       tabindex="-1"
       class="feed-img" 
       :src="gifUrl || '@/assets/images-feedback/caught-in.gif'" 
-      alt="Feedback GIF"
+      :alt="gifAlt || 'Feedback GIF'" 
     >
 
     <!-- Tenor Kreditering -->
@@ -48,6 +48,10 @@ export default {
     gifUrl: {
       type: String,
       default: null
+    },
+    gifAlt: {  // Ny prop til at håndtere ALT-tag
+      type: String,
+      default: 'Feedback GIF'
     }
   }
 };

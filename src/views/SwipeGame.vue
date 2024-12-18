@@ -31,19 +31,22 @@
          </div>
       </div>
       <FeedbackLeft
-         :isVisible="showFeedbackLeft"
-         :class="feedbackBorderClass"
-         :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
-         :feedbackDesc="currentQuestion.answers[0].feedback"
-         :gifUrl="currentQuestion.answers[0].gifUrl"
-         @next="nextQuestion" />
-      <FeedbackRight
-         :isVisible="showFeedbackRight"
-         :class="feedbackBorderClass"
-         :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
-         :feedbackDesc="currentQuestion.answers[1].feedback"
-         :gifUrl="currentQuestion.answers[1].gifUrl"
-         @next="nextQuestion" />
+   :isVisible="showFeedbackLeft"
+   :class="feedbackBorderClass"
+   :feedbackHeading="currentQuestion.answers[0].feedbackHeading"
+   :feedbackDesc="currentQuestion.answers[0].feedback"
+   :gifUrl="currentQuestion.answers[0].gifUrl"
+   :gifAlt="currentQuestion.answers[0].gifAlt" 
+   @next="nextQuestion" />
+
+<FeedbackRight
+   :isVisible="showFeedbackRight"
+   :class="feedbackBorderClass"
+   :feedbackHeading="currentQuestion.answers[1].feedbackHeading"
+   :feedbackDesc="currentQuestion.answers[1].feedback"
+   :gifUrl="currentQuestion.answers[1].gifUrl"
+   :gifAlt="currentQuestion.answers[1].gifAlt" 
+   @next="nextQuestion" />
    </div>
    <div v-else>
       <p>Loading questions...</p>
