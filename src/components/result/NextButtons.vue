@@ -2,12 +2,12 @@
   <div class="button-container">
     <!-- Retry Button -->
     <div class="shadow-parent">
-      <button class="retry-button" @click="$emit('retry')">Vælg niveau</button>
+      <button aria-label="choose level" class="retry-button" @click="$emit('retry')">Vælg niveau</button>
     </div>
 
     <!-- Next Button -->
     <div class="shadow-parent">
-      <button class="next-button" @click="$emit('next')">Videre</button>
+      <button aria-label="continue" class="next-button" @click="$emit('next')">Videre</button>
     </div>
   </div>
 </template>

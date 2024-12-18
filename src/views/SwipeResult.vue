@@ -1,13 +1,13 @@
 <template>
-  <div class="results-container">
-    <h2 class="results-title">SWIPE</h2>
-    <h3 class="level-completed">Niveau {{ $route.params.level }} gennemført!</h3>
+  <div class="results-container" aria-live="polite">
+    <h2 class="results-title" aria-label="Swipe results">SWIPE</h2>
+    <h3 class="level-completed" :aria-label="`Level ${$route.params.level} completed`">Niveau {{ $route.params.level }} gennemført!</h3>
 
     <!-- Results List -->
-    <ResultsDisplay :answeredQuestions="answeredQuestions" />
+    <ResultsDisplay :answeredQuestions="answeredQuestions" aria-label="Results display" />
 
     <!-- Buttons -->
-    <NextButtons @retry="goToHome" @next="goToQuiz" />
+    <NextButtons @retry="goToHome" @next="goToQuiz" aria-label="Next buttons" />
   </div>
 </template>
 

@@ -2,14 +2,16 @@
   <div class="feedback-container" :class="{ visible: isVisible }">
     <!-- Dynamisk GIF-url med fallback -->
     <img
+    tabindex="-1"
       class="feed-img"
       :src="gifUrl || '@/assets/images-feedback/giphy.gif'"
       alt="Feedback GIF"
     >
 
-    <div class="tenor-credit" v-if="gifUrl">
-      <a href="https://tenor.com" target="_blank" rel="noopener noreferrer">
+    <div tabindex="-1" class="tenor-credit" v-if="gifUrl">
+      <a tabindex="-1" href="https://tenor.com" target="_blank" rel="noopener noreferrer">
         <img 
+          tabindex="-1"
           src="https://www.gstatic.com/tenor/web/attribution/PB_tenor_logo_grey_horizontal.png" 
           alt="Tenor logo" 
           class="tenor-logo"
@@ -17,11 +19,11 @@
       </a>
     </div>
     
-    <h2 class="feed-heading">{{ feedbackHeading }}</h2>
-    <p class="feed-subheading"><strong>Vidste du at:</strong></p>
-    <p class="feed-desc">{{ feedbackDesc }}</p>
+    <h2 class="feed-heading" :aria-label="`Feedback heading: ${feedbackHeading}`">{{ feedbackHeading }}</h2>
+    <p class="feed-subheading" aria-label="Did you know"><strong>Vidste du at:</strong></p>
+    <p class="feed-desc" :aria-label="`Feedback description: ${feedbackDesc}`">{{ feedbackDesc }}</p>
     <span class="shadow-parent">
-      <button class="feed-right-btn" @click="$emit('next')">Næste</button>
+      <button class="feed-right-btn" @click="$emit('next')" aria-label="Next">Næste</button>
     </span>
   </div>
 </template>
@@ -101,6 +103,7 @@ export default {
   font-family: Poppins;
   clip-path: polygon(7% 0, 100% 0, 100% 50%, 100% 100%, 7% 100%, 0 50%);
   filter: drop-shadow(-1px 6px 3px rgba(50, 50, 0, 0.5));
+
 }
 
 .shadow-parent {

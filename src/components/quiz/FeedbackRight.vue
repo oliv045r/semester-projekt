@@ -2,6 +2,7 @@
   <div class="feedback-container" :class="{ visible: isVisible }">
     <!-- Dynamisk GIF -->
     <img 
+      tabindex="-1"
       class="feed-img" 
       :src="gifUrl || '@/assets/images-feedback/caught-in.gif'" 
       alt="Feedback GIF"
@@ -9,8 +10,9 @@
 
     <!-- Tenor Kreditering -->
     <div class="tenor-credit" v-if="gifUrl">
-      <a href="https://tenor.com" target="_blank" rel="noopener noreferrer">
+      <a tabindex="-1" href="https://tenor.com" target="_blank" rel="noopener noreferrer">
         <img 
+          tabindex="-1"
           src="https://www.gstatic.com/tenor/web/attribution/PB_tenor_logo_grey_horizontal.png" 
           alt="Tenor logo" 
           class="tenor-logo"
@@ -18,11 +20,11 @@
       </a>
     </div>
 
-    <h2 class="feed-heading">{{ feedbackHeading }}</h2>
-    <p>Vidste du at:</p>
-    <p class="feed-desc">{{ feedbackDesc }}</p>
+    <h2 class="feed-heading" :aria-label="`Feedback heading: ${feedbackHeading}`">{{ feedbackHeading }}</h2>
+    <p aria-label="Did you know"><strong>Vidste du at:</strong></p>
+    <p class="feed-desc" :aria-label="`Feedback description: ${feedbackDesc}`">{{ feedbackDesc }}</p>
     <span class="shadow-parent">
-      <button class="feed-right-btn" @click="$emit('next')">Næste</button>
+      <button class="feed-right-btn" @click="$emit('next')" aria-label="Next">Næste</button>
     </span>
   </div>
 </template>

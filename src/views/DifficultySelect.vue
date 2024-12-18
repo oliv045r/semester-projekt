@@ -9,7 +9,13 @@
       <h3 class ="swipe-header">To valg, et swipe</h3>
       <p>Swipe dig til det mest bæredygtige valg blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
-        <router-link v-for="level in 5" :key="'swipe-' + level" :tabindex="level <= maxSwipeLevel ? 0 : -1" :to="{ name: 'Swipe', params: { level } }">
+        <router-link 
+          v-for="level in 5" 
+          :key="'swipe-' + level" 
+          :tabindex="level <= maxSwipeLevel ? 0 : -1" 
+          :to="{ name: 'Swipe', params: { level } }"
+          :aria-label="'Swipe level ' + level + (level > maxSwipeLevel ? ' locked' : '')"
+        >
           <button 
             tabindex="-1" 
             :class="['difficulty-btn', { 'swipe-active': level <= maxSwipeLevel }]" 
@@ -24,7 +30,13 @@
       <h3 class="quiz-header">Quiz dig selv</h3>
       <p>Har du lært noget af at swipe? Test hvor meget du kan huske!</p>
       <div class="btn-container quiz-swipe">
-        <router-link v-for="level in 5" :key="'quiz-' + level" :tabindex="level <= maxSwipeLevel ? 0 : -1" :to="{ name: 'Quiz', params: { level } }">
+        <router-link 
+          v-for="level in 5" 
+          :key="'quiz-' + level" 
+          :tabindex="level <= maxSwipeLevel ? 0 : -1" 
+          :to="{ name: 'Quiz', params: { level } }"
+          :aria-label="'Quiz level ' + level + (level > maxQuizLevel ? ' locked' : '')"
+        >
           <button 
             tabindex="-1" 
             :class="['difficulty-btn', { 'quiz-active': level <= maxQuizLevel }]" 

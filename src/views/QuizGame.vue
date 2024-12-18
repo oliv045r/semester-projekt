@@ -1,8 +1,8 @@
 <template>
   <div class="quiz-container" v-if="questions.length > 0">
-    <p class="question-number">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
+    <p class="question-number" :aria-label="'Question ' + (currentQuestionIndex + 1)">Spørgsmål {{ currentQuestionIndex + 1 }}</p>
     <div class="question">
-      <p>{{ currentQuestion.questionText }}</p>
+      <p :aria-label="currentQuestion.questionText">{{ currentQuestion.questionText }}</p>
     </div>
     <div class="answers">
       <div
@@ -11,14 +11,15 @@
         class="answer"
         :class="{ selected: selectedAnswerIndex === index, correct: selectedAnswerIndex === index && answer.isCorrect, incorrect: selectedAnswerIndex === index && !answer.isCorrect }"
         @click="selectAnswer(index)"
+        :aria-label="answer.text + (selectedAnswerIndex === index ? (answer.isCorrect ? ' correct' : ' incorrect') : '')"
       >
         {{ answer.text }}
       </div>
     </div>
-    <button v-if="selectedAnswerIndex !== null" @click="nextQuestion">Next</button>
+    <button v-if="selectedAnswerIndex !== null" @click="nextQuestion" aria-label="Next question">Next</button>
   </div>
   <div v-else>
-    <p>Loading questions...</p>
+    <p aria-label="Loading questions">Loading questions...</p>
   </div>
 </template>
 

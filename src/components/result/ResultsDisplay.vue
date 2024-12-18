@@ -2,7 +2,8 @@
     <div>
         <transition-group name="fade" tag="div" class="results-list" @before-enter="onItemEnter">
             <div v-for="(question, index) in answeredQuestions" :key="index" class="result-item"
-                :style="{ animationDelay: `${index * 0.2}s` }">
+                :style="{ animationDelay: `${index * 0.2}s` }"
+                :aria-label="'Question ' + (index + 1) + ': ' + (question.isCorrect ? 'Correct' : 'Incorrect')">
                 <div class="result-header">
                     <p class="question-label">Spørgsmål {{ index + 1 }}</p>
                     <span class="result-status" :class="{ correct: question.isCorrect, wrong: !question.isCorrect }">
@@ -13,7 +14,7 @@
         </transition-group>
 
         <transition name="fade">
-            <div v-if="allItemsAnimated" class="final-score-container">
+            <div v-if="allItemsAnimated" class="final-score-container" aria-live="polite">
                 <p class="final-score">
                     Du fik {{ correctAnswers }}/{{ totalQuestions }} spørgsmål rigtige.
                 </p>
