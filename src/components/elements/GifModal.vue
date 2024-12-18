@@ -24,6 +24,7 @@
 
       <button class="close-button" @click="$emit('close')">Luk</button>
     </div>
+  </div>
   </template>
   
   <script>
@@ -35,8 +36,7 @@
       isVisible: {
         type: Boolean,
         required: true,
-      },
-    },
+    }
   },
   data() {
     return {

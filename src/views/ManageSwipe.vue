@@ -171,6 +171,11 @@ body {
   color: var(--text-color);
 }
 
+h2 {
+  margin-top: 40px;
+  font-size: 22px;
+}
+
 .admin-container {
   display: flex;
   flex-direction: column;
@@ -182,6 +187,46 @@ body {
 
 .level-selector {
   margin-bottom: 20px;
+  display: flex;
+  padding: 10px;
+  text-align: center;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.level-selector label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--main-color); /* Brug en fremhævet farve */
+}
+
+.level-selector select {
+  width: 150px;
+  padding: 10px;
+  border: 2px solid var(--input-border-color);
+  border-radius: 8px; 
+  background-color: var(--text-color);
+  color: var(--background-color);
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: border-color 0.3s, box-shadow 0.3s ease;
+}
+
+.level-selector select option {
+  text-align: center; 
+  padding-right: 10px;
+}
+
+.level-selector select:hover {
+  border-color: var(--main-color);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Forstærk skyggen ved hover */
+}
+
+.level-selector select:focus {
+  border-color: var(--highlight-color); /* Fremhæv når fokus er på dropdown */
+  box-shadow: 0 0 8px var(--secondary-color);
 }
 
 .questions-container {
