@@ -195,7 +195,7 @@ export default {
 }
 
 .answer.incorrect {
-  background-color: var(--minus-mark-color)
+  background-color: var(--minus-mark-color);
 }
 
 button {

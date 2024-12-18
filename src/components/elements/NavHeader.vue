@@ -6,10 +6,12 @@
             </router-link>
         </div>
         <nav>
+
             <ul tabindex="-1" :class="{ 'nav-open': isNavOpen }" class="nav-links" @click="closeNav">
                 <li><router-link tabindex="102" to="/">Forside</router-link></li>
                 <li><router-link tabindex="103" to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
                 <li><router-link tabindex="104" to="/admin">Admin</router-link></li>
+                <li><router-link to="/user-settings">Indstillinger</router-link></li>
                 <li><button tabindex="105" class="signOutButton" @click="signOut">Log ud</button></li>
             </ul>
             <button
