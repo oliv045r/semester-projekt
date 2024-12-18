@@ -30,6 +30,10 @@
               <label :for="'gifUrl' + index">GIF URL:</label>
               <input :id="'gifUrl' + index" type="text" v-model="answer.gifUrl" />
               <button type="button" @click="openGifModal(index)">Vælg GIF</button>
+              <div v-if="answer.gifUrl" class="form-group">
+                <label :for="'gifAlt' + index">ALT-tag:</label>
+                <input :id="'gifAlt' + index" type="text" v-model="answer.gifAlt" placeholder="Beskriv billedet" required />
+              </div>
             </div>
             <div class="form-group checkbox-group">
               <label :for="'isCorrect' + index">Er korrekt:</label>
@@ -55,6 +59,7 @@ export default {
     modalTitle: String,
     showFeedback: Boolean,
     addQuestion: Function,
+    updateQuestion: Function, // Tilføj denne prop
     closeModal: Function,
     question: Object
   },
@@ -77,8 +82,8 @@ export default {
             questionText: '',
             answers: this.showFeedback
               ? [
-                  { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false },
-                  { text: '', gifUrl: '', feedbackHeading: '', feedback: '', isCorrect: false }
+                  { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
+                  { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false }
                 ]
               : [
                   { text: '', isCorrect: false },
@@ -90,7 +95,7 @@ export default {
     },
     submitQuestion() {
       if (this.question) {
-        this.updateQuestion(this.localQuestion);
+        this.updateQuestion(this.localQuestion); // Ret denne linje
       } else {
         this.addQuestion(this.localQuestion);
       }
@@ -103,9 +108,10 @@ export default {
     closeGifModal() {
       this.gifModalVisible = false;
     },
-    selectGif(url) {
+    selectGif({ url, altTag }) {
       if (this.gifModalIndex !== null) {
         this.localQuestion.answers[this.gifModalIndex].gifUrl = url;
+        this.localQuestion.answers[this.gifModalIndex].gifAlt = altTag; // Gem ALT-tagget
       }
       this.gifModalVisible = false;
     }
