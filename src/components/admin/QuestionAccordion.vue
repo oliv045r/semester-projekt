@@ -50,7 +50,7 @@ export default {
   margin-bottom: 10px;
   padding: 10px 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  width: 90%;
+  width: 87%;
   animation: fade-in 0.5s ease-out forwards; /* Fade-in animation */
 }
 
