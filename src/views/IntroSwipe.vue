@@ -1,90 +1,123 @@
 <template>
-    <div class="intro-container">
-      <div class="swipe-area">
-        <div
-          class="start-area right"
-          v-gesture="handleSwipe"
-          :class="{ swiped: swipedRight }"
-        >
-          Swipe til højre for at starte!
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "IntroSwipe",
-    data() {
-      return {
-        touchStartX: 0,
-        touchEndX: 0,
-        swipedRight: false,
-      };
-    },
-    methods: {
-      handleTouchStart(event) {
-        this.touchStartX = event.touches[0].clientX;
-      },
-      handleTouchEnd(event) {
-        this.touchEndX = event.changedTouches[0].clientX;
-        this.detectSwipe();
-      },
-      detectSwipe() {
-        const swipeDistance = this.touchEndX - this.touchStartX;
-        if (swipeDistance > 50) {
-          // Swipe til højre
-          this.swipedRight = true;
-          this.startGame();
+  <div class="leaderboard-container">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Plads</th>
+          <th>Navn</th>
+          <th>Niveau</th>
+          <th>Point</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(user, index) in users" :key="user.userId">
+          <td>{{ index + 1 }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.currentLevel }}</td>
+          <td>{{ user.points }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import { db } from "@/firebase/firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+
+export default {
+  name: "IntroSwipe",
+  data() {
+    return {
+      users: [],
+    };
+  },
+  async created() {
+    try {
+      // Hent alle brugere fra Firebase
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const usersData = [];
+
+      for (const doc of querySnapshot.docs) {
+        const userData = doc.data();
+
+        // Beregn point baseret på antal rigtige svar (50 point pr. rigtigt svar)
+        const correctAnswers = userData.correctAnswers || 0;
+        const points = correctAnswers * 50;
+
+        usersData.push({
+          userId: userData.userId,
+          username: userData.username || "Ukendt",
+          currentLevel: userData.currentLevel || 1,
+          points,
+        });
+      }
+
+      // Sortér brugerne efter niveau og derefter point
+      this.users = usersData.sort((a, b) => {
+        if (b.currentLevel === a.currentLevel) {
+          return b.points - a.points;
         }
-      },
-      startGame() {
-        this.$router.push({ name: "SwipeGame", params: { level: 1 } });
-      },
-    },
-  };
-  </script>
-  
-  
-  <style scoped>
-  .intro-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .swipe-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .start-area {
-    width: 85%;
-    padding: 30px;
-    text-align: center;
-    font-size: 22px;
-    background-color: var(--main-color);
-    color: #fff;
-    clip-path: polygon(0% 0, 90% 0, 100% 50%, 90% 100%, 0% 100%, -10% 50%);
-    transition: transform 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .start-area.right {
-    margin-top: 1rem;
-    align-self: center;
-  }
-  
-  .start-area.swiped {
-    transform: translateX(100%);
-  }
-  </style>
-  
+        return b.currentLevel - a.currentLevel;
+      });
+    } catch (error) {
+      console.error("Fejl ved hentning af leaderboard-data:", error);
+    }
+  },
+};
+</script>
+
+<style scoped>
+.leaderboard-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ffffff;
+}
+
+th {
+  background-color: #FF6600;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #0056b3;
+}
+
+tr:hover {
+  background-color: #004494;
+}
+
+tr:first-child th {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+tr:last-child td {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+</style>

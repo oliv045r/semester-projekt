@@ -13,7 +13,6 @@
         <router-link to="/" aria-label="Log ud">
           <PrimaryButton @click="logout">Log ud</PrimaryButton>
         </router-link>
-
       </div>
     </div>
 

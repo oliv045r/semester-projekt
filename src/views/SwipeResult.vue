@@ -15,7 +15,7 @@
 import ResultsDisplay from "@/components/result/ResultsDisplay.vue";
 import NextButtons from "@/components/result/NextButtons.vue";
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default {
   name: "SwipeResult",
@@ -23,13 +23,17 @@ export default {
   data() {
     return {
       answeredQuestions: [],
+      correctAnswers: 0,
     };
   },
   async created() {
     const level = this.$route.params.level;
     const quizId = `SwipeQuestions${level}`;
+
     if (quizId) {
       const user = auth.currentUser;
+      if (!user) return; // Sikrer at der er en bruger
+
       const progressRef = collection(db, `users/${user.uid}/progress`);
       const q = query(progressRef, where("quizId", "==", quizId));
       const querySnapshot = await getDocs(q);
@@ -50,7 +54,21 @@ export default {
         })
       );
 
+      // Filter og gem besvarelser
       this.answeredQuestions = answeredQuestions.filter((q) => q !== null);
+
+      // Beregn rigtige svar
+      this.correctAnswers = this.answeredQuestions.filter((q) => q.isCorrect).length;
+
+      // Opdater brugerens data i databasen
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+      const userData = userDoc.data();
+
+      await updateDoc(userRef, {
+        totalQuestions: (userData.totalQuestions || 0) + this.answeredQuestions.length,
+        correctAnswers: (userData.correctAnswers || 0) + this.correctAnswers,
+      });
     }
   },
   methods: {
@@ -63,6 +81,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .results-container {
