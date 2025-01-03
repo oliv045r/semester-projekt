@@ -41,7 +41,9 @@ export default {
               userId: authenticatedUser.uid,
               email: authenticatedUser.email,
               username: username,
-              currentLevel: 1
+              currentLevel: 1,
+              totalQuestions: 0,  
+              correctAnswers: 0 
             });
 
             // Redirect to the difficulty selection page

@@ -15,7 +15,7 @@
 import ResultsDisplay from "@/components/result/ResultsDisplay.vue";
 import NextButtons from "@/components/result/NextButtons.vue";
 import { db, auth } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, getDoc, updateDoc } from "firebase/firestore";
 
 export default {
   name: "QuizResult",
@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       answeredQuestions: [],
+      correctAnswers: 0,
     };
   },
   async created() {
@@ -30,6 +31,8 @@ export default {
     const quizId = `QuizQuestions${level}`;
     if (quizId) {
       const user = auth.currentUser;
+      if (!user) return;
+
       const progressRef = collection(db, `users/${user.uid}/progress`);
       const q = query(progressRef, where("quizId", "==", quizId));
       const querySnapshot = await getDocs(q);
@@ -50,6 +53,19 @@ export default {
       );
 
       this.answeredQuestions = answeredQuestions.filter((q) => q !== null);
+
+      // Beregn point baseret på rigtige svar (50 point pr. rigtigt svar)
+      this.correctAnswers = this.answeredQuestions.filter((q) => q.isCorrect).length;
+
+      // Opdater database med nye point
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+      const userData = userDoc.data();
+
+      await updateDoc(userRef, {
+        totalQuestions: (userData.totalQuestions || 0) + this.answeredQuestions.length,
+        correctAnswers: (userData.correctAnswers || 0) + this.correctAnswers,
+      });
     }
   },
   methods: {
