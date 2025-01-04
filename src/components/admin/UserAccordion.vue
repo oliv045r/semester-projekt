@@ -51,14 +51,14 @@ export default {
           await updateDoc(userDocRef, {
             isAdmin: true
           });
-          alert('Admin access granted successfully.');
+          alert('Admin adgang er givet.');
           this.$emit('updateUser', userId, { isAdmin: true });
         } catch (error) {
-          console.error("Error granting admin access:", error);
-          alert('Error granting admin access.');
+          console.error("Kunne ikke give admin adgang:", error);
+          alert('Kunne ikke give admin adgang.');
         }
       } else {
-        alert('You do not have permission to perform this action.');
+        alert('Du har ikke rettigheder til at foretage denne ændring.');
       }
     },
     async removeAdminAccess(userId) {
@@ -68,14 +68,14 @@ export default {
           await updateDoc(userDocRef, {
             isAdmin: false
           });
-          alert('Admin access removed successfully.');
+          alert('Admin adgang er fjernet');
           this.$emit('updateUser', userId, { isAdmin: false });
         } catch (error) {
-          console.error("Error removing admin access:", error);
-          alert('Error removing admin access.');
+          console.error("Kunne ikke fjerne admin adgang:", error);
+          alert('Kunne ikke fjerne admin adgang.');
         }
       } else {
-        alert('You do not have permission to perform this action.');
+        alert('Du har ikke rettigheder til at foretage denne ændring.');
       }
     }
   }
