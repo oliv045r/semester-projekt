@@ -6,14 +6,18 @@
             </router-link>
         </div>
         <nav>
-
             <ul tabindex="-1" :class="{ 'nav-open': isNavOpen }" class="nav-links" @click="closeNav">
                 <li><router-link tabindex="102" to="/">Forside</router-link></li>
-                <li><router-link tabindex="103" to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
-                <li><router-link tabindex="104" to="/admin">Admin</router-link></li>
-                <li><router-link to="/user-settings">Indstillinger</router-link></li>
-                <li><router-link to="/intro-swipe">Leaderboard</router-link></li>
-                <li><button tabindex="105" class="signOutButton" @click="signOut">Log ud</button></li>
+                <template v-if="isSignedIn">
+                    <li><router-link tabindex="103" to="/vælg-sværhedsgrad">Vælg niveau</router-link></li>
+                    <li v-if="isAdmin"><router-link tabindex="104" to="/admin">Admin</router-link></li>
+                    <li><router-link to="/user-settings">Indstillinger</router-link></li>
+                    <li><router-link to="/intro-swipe">Leaderboard</router-link></li>
+                    <li><button tabindex="105" class="signOutButton" @click="signOut">Log ud</button></li>
+                </template>
+                <template v-else>
+                    <li><router-link class="signOutButton signinbtn" tabindex="105" to="/log-ind">Log ind</router-link></li>
+                </template>
             </ul>
             <button
                 tabindex="101" 
@@ -32,15 +36,21 @@
 
 
 <script>
-import { signOut } from "firebase/auth";    
-import { auth } from "@/firebase/firebaseConfig";
+import { signOut, getAuth, onAuthStateChanged } from "firebase/auth";    
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
 
 export default {
     name: 'NavHeader',
     data() {
         return {
             isNavOpen: false,
+            isAdmin: false,
+            isSignedIn: false
         };
+    },
+    async created() {
+        this.checkAuthState();
     },
     methods: {
         toggleNav() {
@@ -50,14 +60,38 @@ export default {
             this.isNavOpen = false;
         },
         async signOut() {
+            const auth = getAuth();
             try {
                 await signOut(auth);
                 console.log('Signed out');
+                this.isSignedIn = false;
+                this.isAdmin = false;
                 this.$router.push('/log-ind'); // Redirect to login page after sign out
-                window.location.reload(); // Ensure the page reloads to update the UI
             } catch (error) {
                 console.error('Error signing out:', error);
             }
+        },
+        async checkIfAdmin() {
+            const auth = getAuth();
+            const currentUser = auth.currentUser;
+            if (currentUser) {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists() && userDoc.data().isAdmin) {
+                    this.isAdmin = true;
+                }
+            }
+        },
+        checkAuthState() {
+            const auth = getAuth();
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    this.isSignedIn = true;
+                    await this.checkIfAdmin();
+                } else {
+                    this.isSignedIn = false;
+                    this.isAdmin = false;
+                }
+            });
         },
         handleClickOutside(event) {
             if (!this.$el.contains(event.target)) {
@@ -186,6 +220,10 @@ export default {
 
 .signOutButton {
     background-color: var(--secondary-color);
+}
+
+.signinbtn {
+    top: 1rem;
 }
 
 /* Responsiv styling */
