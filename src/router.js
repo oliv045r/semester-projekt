@@ -17,6 +17,7 @@ import UserManagement from './views/UserManagement.vue';
 import AdminPanel from './views/AdminPanel.vue';
 import IntroSwipe from './views/IntroSwipe.vue';
 import UserSettings from '@/views/UserSettings.vue';
+import SwipeAdapt from './views/SwipeAdapt.vue';
 
 const routes = [
   { path: '/', component: StartPage },
@@ -24,6 +25,7 @@ const routes = [
   { path: '/log-ind', component: LogIn },
   { path: '/vælg-sværhedsgrad', component: DifficultySelect, meta: { requiresAuth: true } },
   { path: '/swipe/:level', name: 'Swipe', component: SwipeGame, meta: { requiresAuth: true } },
+  { path: '/swipe-adapt', name: 'SwipeAdapt', component: SwipeAdapt, meta: { requiresAuth: true } },
   { path: '/quiz/:level', name: 'Quiz', component: QuizGame, meta: { requiresAuth: true } },
   { path: '/swipe-resultat/:level', name: 'SwipeResult', component: SwipeResult, meta: { requiresAuth: true } },
   { path: '/quiz-resultat/:level', name: 'QuizResult', component: QuizResult, meta: { requiresAuth: true } },
