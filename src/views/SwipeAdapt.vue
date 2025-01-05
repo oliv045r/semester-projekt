@@ -51,14 +51,14 @@
 </template>
 
 <script>
-import { db } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import FeedbackLeft from "@/components/quiz/FeedbackLeft.vue";
-import FeedbackRight from "@/components/quiz/FeedbackRight.vue";
-import SwipeAnimation from "@/components/elements/SwipeAnimation.vue";
+import { db } from "@/firebase/firebaseConfig"; // Importer Firebase konfiguration
+import { collection, getDocs, query, where } from "firebase/firestore"; // Importer nødvendige funktioner fra Firebase Firestore
+import FeedbackLeft from "@/components/quiz/FeedbackLeft.vue"; // Importer FeedbackLeft komponent
+import FeedbackRight from "@/components/quiz/FeedbackRight.vue"; // Importer FeedbackRight komponent
+import SwipeAnimation from "@/components/elements/SwipeAnimation.vue"; // Importer SwipeAnimation komponent
 
 export default {
-   name: "SwipeAdapt",
+   name: "SwipeAdapt", // Navn på komponenten
    components: {
       FeedbackLeft,
       FeedbackRight,
@@ -66,127 +66,127 @@ export default {
    },
    data() {
       return {
-         questions: [],
-         currentQuestionIndex: 0,
-         swipedLeft: false,
-         swipedRight: false,
-         feedbackBorderClass: "", // Ny variabel til CSS-klasser
-         showFeedbackLeft: false,
-         showFeedbackRight: false,
-         showSwipeAnimation: false, // Tilføj variabel til animation
-         currentLevel: 1,
-         correctAnswers: 0,
-         incorrectAnswers: 0,
-         totalQuestionsAnswered: 0,
-         answeredQuestions: new Set(), // Track answered questions to avoid repetition
+         questions: [], // Liste over spørgsmål
+         currentQuestionIndex: 0, // Indeks for det aktuelle spørgsmål
+         swipedLeft: false, // Om der er blevet swipet til venstre
+         swipedRight: false, // Om der er blevet swipet til højre
+         feedbackBorderClass: "", // CSS-klasse for feedback grænse
+         showFeedbackLeft: false, // Om feedback for venstre swipe skal vises
+         showFeedbackRight: false, // Om feedback for højre swipe skal vises
+         showSwipeAnimation: false, // Om swipe animation skal vises
+         currentLevel: 1, // Det aktuelle niveau
+         correctAnswers: 0, // Antal korrekte svar
+         incorrectAnswers: 0, // Antal forkerte svar
+         totalQuestionsAnswered: 0, // Antal besvarede spørgsmål
+         answeredQuestions: new Set(), // Spor besvarede spørgsmål for at undgå gentagelser
       };
    },
    computed: {
       currentQuestion() {
-         return this.questions[this.currentQuestionIndex] || {};
+         return this.questions[this.currentQuestionIndex] || {}; // Returner det aktuelle spørgsmål eller en tomt objekt, hvis der ikke er flere spørgsmål
       },
    },
    async created() {
-      await this.fetchQuestions(this.currentLevel);
+      await this.fetchQuestions(this.currentLevel); // Hent spørgsmål, når komponenten er oprettet
    },
    methods: {
       async fetchQuestions(level) {
          try {
-            const q = query(collection(db, `SwipeQuestions`), where("SwipeLevel", "==", level.toString()));
-            const querySnapshot = await getDocs(q);
+            const q = query(collection(db, `SwipeQuestions`), where("SwipeLevel", "==", level.toString())); // Opret en forespørgsel til databasen for at hente spørgsmål på det aktuelle niveau
+            const querySnapshot = await getDocs(q); // Udfør forespørgslen og vent på resultaterne
             const newQuestions = querySnapshot.docs.map((doc) => ({
                id: doc.id,
                ...doc.data(),
-            })).filter(question => !this.answeredQuestions.has(question.id));
+            })).filter(question => !this.answeredQuestions.has(question.id)); // Filtrer spørgsmål, der allerede er besvaret
 
             if (newQuestions.length > 0) {
-               this.questions = newQuestions;
-               this.currentQuestionIndex = 0;
+               this.questions = newQuestions; // Opdater spørgsmålene, hvis der er nye spørgsmål
+               this.currentQuestionIndex = 0; // Nulstil det aktuelle spørgsmål indeks
             } else {
-               // If no new questions, fetch from the nearest level
+               // Hvis der ikke er nye spørgsmål, hent fra det nærmeste niveau
                if (level < 5) {
-                  await this.fetchQuestions(level + 1);
+                  await this.fetchQuestions(level + 1); // Hent spørgsmål fra det næste niveau
                } else if (level > 1) {
-                  await this.fetchQuestions(level - 1);
+                  await this.fetchQuestions(level - 1); // Hent spørgsmål fra det forrige niveau
                }
             }
          } catch (error) {
-            console.error("Error fetching questions:", error);
+            console.error("Error fetching questions:", error); // Log en fejl, hvis der opstår en fejl under hentning af spørgsmål
          }
       },
       async handleClick(direction) {
          if (direction === "left") {
-            this.swipedLeft = true;
-            this.showFeedbackLeft = true;
-            this.showFeedbackRight = false;
-            this.handleSwipe({ direction: "left" });
+            this.swipedLeft = true; // Angiv at der er blevet swipet til venstre
+            this.showFeedbackLeft = true; // Vis feedback for venstre swipe
+            this.showFeedbackRight = false; // Skjul feedback for højre swipe
+            this.handleSwipe({ direction: "left" }); // Håndter venstre swipe
          } else if (direction === "right") {
-            this.swipedRight = true;
-            this.showFeedbackRight = true;
-            this.showFeedbackLeft = false;
-            this.handleSwipe({ direction: "right" });
+            this.swipedRight = true; // Angiv at der er blevet swipet til højre
+            this.showFeedbackRight = true; // Vis feedback for højre swipe
+            this.showFeedbackLeft = false; // Skjul feedback for venstre swipe
+            this.handleSwipe({ direction: "right" }); // Håndter højre swipe
          }
       },
       async handleKeydown(direction, event) {
          if (event.key === "Enter" || event.key === " ") {
-            await this.handleClick(direction);
+            await this.handleClick(direction); // Håndter klik, hvis Enter eller mellemrumstasten er trykket
          }
       },
       async handleSwipe(direction) {
-         const selectedAnswer = direction === "left" ? 0 : 1;
-         const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
+         const selectedAnswer = direction === "left" ? 0 : 1; // Vælg svar baseret på swipe retning
+         const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect; // Tjek om svaret er korrekt
 
-         this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border";
+         this.feedbackBorderClass = isCorrect ? "correct-border" : "incorrect-border"; // Sæt feedback grænse klasse baseret på korrekthed
 
          // Fjern klassen efter 2 sekunder
          setTimeout(() => {
             this.feedbackBorderClass = "";
          }, 2000);
 
-         this.checkAnswer(direction);
+         this.checkAnswer(direction); // Tjek svaret
       },
       async checkAnswer(direction) {
-         const selectedAnswer = direction === "left" ? 0 : 1;
-         const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect;
+         const selectedAnswer = direction === "left" ? 0 : 1; // Vælg svar baseret på swipe retning
+         const isCorrect = this.currentQuestion.answers[selectedAnswer].isCorrect; // Tjek om svaret er korrekt
 
          if (isCorrect) {
-            this.correctAnswers++;
-            this.incorrectAnswers = 0; // Reset incorrect answers
+            this.correctAnswers++; // Øg antal korrekte svar
+            this.incorrectAnswers = 0; // Nulstil antal forkerte svar
             if (this.currentLevel < 5) {
-               this.currentLevel++;
+               this.currentLevel++; // Øg niveauet hvis muligt
             }
          } else {
-            this.incorrectAnswers++;
+            this.incorrectAnswers++; // Øg antal forkerte svar
             if (this.incorrectAnswers >= 2 && this.currentLevel > 1) {
-               this.currentLevel--;
-               this.incorrectAnswers = 0; // Reset incorrect answers
+               this.currentLevel--; // Sænk niveauet hvis der er for mange forkerte svar
+               this.incorrectAnswers = 0; // Nulstil antal forkerte svar
             }
          }
 
-         this.totalQuestionsAnswered++;
-         this.answeredQuestions.add(this.currentQuestion.id);
+         this.totalQuestionsAnswered++; // Øg antal besvarede spørgsmål
+         this.answeredQuestions.add(this.currentQuestion.id); // Tilføj spørgsmålet til besvarede spørgsmål
 
          if (this.totalQuestionsAnswered >= 10) {
-            this.endQuiz();
+            this.endQuiz(); // Afslut quiz hvis der er besvaret 10 spørgsmål
          } else {
-            await this.fetchQuestions(this.currentLevel);
+            await this.fetchQuestions(this.currentLevel); // Hent nye spørgsmål
          }
       },
       async nextQuestion() {
-         this.swipedLeft = false;
-         this.swipedRight = false;
-         this.showFeedbackLeft = false;
-         this.showFeedbackRight = false;
+         this.swipedLeft = false; // Nulstil venstre swipe
+         this.swipedRight = false; // Nulstil højre swipe
+         this.showFeedbackLeft = false; // Skjul venstre feedback
+         this.showFeedbackRight = false; // Skjul højre feedback
 
          if (this.currentQuestionIndex < this.questions.length - 1) {
-            this.currentQuestionIndex++;
+            this.currentQuestionIndex++; // Gå til næste spørgsmål
          } else {
-            await this.fetchQuestions(this.currentLevel);
+            await this.fetchQuestions(this.currentLevel); // Hent nye spørgsmål hvis der ikke er flere
          }
       },
       async endQuiz() {
-         const level = this.currentLevel;
-         this.$router.push({ name: "SwipeResult", params: { level } });
+         const level = this.currentLevel; // Gem det aktuelle niveau
+         this.$router.push({ name: "SwipeResult", params: { level } }); // Naviger til resultat siden
       },
    },
 };
