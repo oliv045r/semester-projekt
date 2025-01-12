@@ -8,7 +8,7 @@
   <p>
     Har du allerede en bruger?
     <router-link tabindex="10" class="login-link" to="/log-ind">
-      <strong>Log ind her</strong>
+      <strong>Log ind</strong>
     </router-link>
   </p>
 </template>
@@ -100,7 +100,14 @@ button:active {
   font-weight: bold;
 }
 
+h2 {
+  text-align:left;
+  width: 90%;
+}
+
 p {
   color: var(--text-color);
+  text-align:left !important;
+  width: 76.55%;
 }
 </style>

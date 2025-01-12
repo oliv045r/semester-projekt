@@ -7,9 +7,20 @@
       <button type="button" class="icon-button" @click="openEditModal(localQuestion)">
         <i class="fas fa-edit"></i>
       </button>
-      <button type="button" class="icon-button" @click="deleteQuestion(localQuestion.id)">
+      <button type="button" class="icon-button" @click="showConfirmModal = true">
         <i class="fas fa-trash"></i>
       </button>
+    </div>
+
+    <!-- Modal til sletning -->
+    <div v-if="showConfirmModal" class="modal-overlay">
+      <div class="modal-content">
+        <p>Er du sikker på, du vil slette spørgsmålet?</p>
+        <div class="modal-buttons">
+          <button @click="confirmDelete">Ja</button>
+          <button @click="closeModal">Annuller</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -25,7 +36,8 @@ export default {
   },
   data() {
     return {
-      localQuestion: JSON.parse(JSON.stringify(this.question))
+      localQuestion: JSON.parse(JSON.stringify(this.question)),
+      showConfirmModal: false // Modal-tilstand
     };
   },
   watch: {
@@ -34,6 +46,15 @@ export default {
         this.localQuestion = JSON.parse(JSON.stringify(newVal));
       },
       deep: true
+    }
+  },
+  methods: {
+    confirmDelete() {
+      this.deleteQuestion(this.localQuestion.id);
+      this.showConfirmModal = false; // Luk modal efter sletning
+    },
+    closeModal() {
+      this.showConfirmModal = false; // Luk modal uden sletning
     }
   }
 };
@@ -74,5 +95,51 @@ export default {
 
 .icon-button:hover {
   color: var(--text-color);
+}
+
+/* Modal styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--background-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 300px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background-color: #f44336;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #ccc;
+  color: black;
 }
 </style>

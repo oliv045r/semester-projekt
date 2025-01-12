@@ -8,7 +8,7 @@
       <p>Er du klar?</p>
       <div class="btn-container">
         <router-link to="/vælg-sværhedsgrad" aria-label="Vælg niveau">
-          <PrimaryButton :secondary="true">Vælg niveau</PrimaryButton>
+          <PrimaryButton :bold="true">Vælg niveau</PrimaryButton>
         </router-link>
         <router-link to="/" aria-label="Log ud">
           <PrimaryButton @click="logout">Log ud</PrimaryButton>

@@ -16,7 +16,7 @@
         {{ answer.text }}
       </div>
     </div>
-    <button v-if="selectedAnswerIndex !== null" @click="nextQuestion" aria-label="Next question">Next</button>
+    <button v-if="selectedAnswerIndex !== null" @click="nextQuestion" aria-label="Next question">Næste</button>
   </div>
   <div v-else>
     <p aria-label="Loading questions">Loading questions...</p>
@@ -159,8 +159,10 @@ export default {
 }
 
 .question-number {
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 600;
+  text-align: left; /* Sørger for venstrejustering */
+  width: 90%; /* Tvinger bredden til at fylde containeren */
 }
 
 .question {
@@ -173,17 +175,19 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
+  width: 90%;
 }
 
 .answer {
   width: 85%;
-  padding: 30px;
+  padding: 30px 30px 30px 10px;
   text-align: left;
   cursor: pointer;
   transition: transform 0.3s ease;
   background-color: var(--main-color);
   margin: 10px 0;
+  border-radius: 7px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
 }
 
 .answer.selected {

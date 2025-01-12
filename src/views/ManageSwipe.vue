@@ -8,7 +8,9 @@
       </select>
     </div>
     <QuestionModal :isVisible="showModal" :question="editingQuestion" modalTitle="Tilføj Swipe Spørgsmål"
-      :showFeedback="true" :addQuestion="addQuestion" :updateQuestion="updateQuestion" :closeModal="closeModal" />
+      :showFeedback="true" :addQuestion="addQuestion" :updateQuestion="updateQuestion" :closeModal="closeModal"
+      @showSnackbar="showSnackbar" />
+
     <div class="questions-container" v-if="questions.length > 0">
       <QuestionAccordion v-for="(question, index) in questions" :key="question.id" :question="question" :index="index"
         :isActive="activeIndex === index" :showFeedback="true" :toggleAccordion="toggleAccordion"
@@ -22,6 +24,10 @@
     </button>
     <GifModal :isVisible="gifModalVisible" @close="closeGifModal" @select="selectGif" />
   </div>
+  <div v-if="snackbarVisible && snackbarMessage" class="snackbar">
+  {{ snackbarMessage }}
+</div>
+
 </template>
 
 <script>
@@ -48,7 +54,9 @@ export default {
         answers: [
           { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
           { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false }
-        ]
+        ],
+        snackbarVisible: false, // Styrer om snackbaren vises
+        snackbarMessage: "",    // Indholder beskeden, der vises i snackbaren
       },
       editingQuestion: null // Track the question being edited
     };
@@ -63,28 +71,45 @@ export default {
         console.error("Error fetching questions:", error);
       }
     },
+    showSnackbar(message) {
+  if (!message || this.snackbarVisible) return; // Undgå overlap
+
+  this.snackbarMessage = message;
+  this.snackbarVisible = true;
+
+  setTimeout(() => {
+    this.snackbarVisible = false;
+
+    setTimeout(() => {
+      this.snackbarMessage = ""; // Ryd beskeden efter visningen
+    }, 500); // Ryd beskeden lidt efter, at snackbaren er skjult
+  }, 3000);
+},
     async addQuestion(newQuestion) {
       try {
         const questionId = `q${Date.now()}`;
         await setDoc(doc(db, "SwipeQuestions", questionId), {
           questionId,
           SwipeLevel: this.selectedLevel.toString(),
-          ...newQuestion
+          ...newQuestion,
         });
         this.fetchQuestions();
         this.resetForm();
         this.showModal = false;
+        this.showSnackbar("Spørgsmål tilføjet!"); // Tilføjet
       } catch (error) {
         console.error("Error adding question:", error);
       }
     },
+
     async updateQuestion(updatedQuestion) {
       try {
-        const question = this.questions.find(q => q.id === updatedQuestion.id);
+        const question = this.questions.find((q) => q.id === updatedQuestion.id);
         if (question) {
           Object.assign(question, updatedQuestion);
           await updateDoc(doc(db, "SwipeQuestions", updatedQuestion.id), question);
           this.fetchQuestions();
+          this.showSnackbar("Spørgsmål opdateret!"); // Tilføjet
         } else {
           console.error("Question not found:", updatedQuestion.id);
         }
@@ -92,14 +117,17 @@ export default {
         console.error("Error updating question:", error);
       }
     },
+
     async deleteQuestion(questionId) {
       try {
         await deleteDoc(doc(db, "SwipeQuestions", questionId));
         this.fetchQuestions();
+        this.showSnackbar("Spørgsmål slettet!"); // Tilføjet
       } catch (error) {
         console.error("Error deleting question:", error);
       }
     },
+
     toggleAccordion(index) {
       this.activeIndex = this.activeIndex === index ? null : index;
     },
@@ -147,7 +175,15 @@ export default {
   },
   async created() {
     this.fetchQuestions();
-  }
+  },
+  watch: {
+  snackbarVisible(newVal) {
+    console.log("Snackbar visibility changed to:", newVal);
+  },
+  snackbarMessage(newVal) {
+    console.log("Snackbar message changed to:", newVal);
+  },
+},
 };
 </script>
 
@@ -197,35 +233,38 @@ h2 {
 .level-selector label {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--main-color); /* Brug en fremhævet farve */
+  color: var(--main-color);
+  /* Brug en fremhævet farve */
 }
 
 .level-selector select {
   width: 150px;
   padding: 10px;
   border: 2px solid var(--input-border-color);
-  border-radius: 8px; 
+  border-radius: 8px;
   background-color: var(--text-color);
   color: var(--background-color);
   font-size: 1rem;
   text-align: center;
   outline: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s, box-shadow 0.3s ease;
 }
 
 .level-selector select option {
-  text-align: center; 
+  text-align: center;
   padding-right: 10px;
 }
 
 .level-selector select:hover {
   border-color: var(--main-color);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Forstærk skyggen ved hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  /* Forstærk skyggen ved hover */
 }
 
 .level-selector select:focus {
-  border-color: var(--highlight-color); /* Fremhæv når fokus er på dropdown */
+  border-color: var(--highlight-color);
+  /* Fremhæv når fokus er på dropdown */
   box-shadow: 0 0 8px var(--secondary-color);
 }
 
@@ -251,5 +290,43 @@ h2 {
   margin-top: 3px;
   font-size: 25px;
   color: black;
+}
+
+.snackbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation-fill-mode: forwards; 
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    bottom: 10px;
+  }
+
+  to {
+    opacity: 1;
+    bottom: 20px;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+    bottom: 20px;
+  }
+
+  to {
+    opacity: 0;
+    bottom: 10px;
+  }
 }
 </style>

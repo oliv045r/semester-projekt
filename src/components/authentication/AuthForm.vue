@@ -96,7 +96,8 @@ export default {
    border-radius: 4px;
 }
 .auth-form h2 {
-   text-align: center;
+   text-align: left;
+   margin-bottom: 0.5em;
 }
 .auth-form div {
    margin-bottom: 1em;
@@ -126,7 +127,7 @@ export default {
    display: inline-block;
    background-color: var(--secondary-color); /* Blue color */
    color: #fff; /* White text */
-   font-size: 16px; /* Adjust as needed */
+   font-size: 18px; /* Adjust as needed */
    font-weight: bold;
    text-align: center;
    padding: 15px 52px;

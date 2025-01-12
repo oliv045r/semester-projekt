@@ -32,7 +32,8 @@
               <button type="button" @click="openGifModal(index)">Vælg GIF</button>
               <div v-if="answer.gifUrl" class="form-group">
                 <label :for="'gifAlt' + index">ALT-tag:</label>
-                <input :id="'gifAlt' + index" type="text" v-model="answer.gifAlt" placeholder="Beskriv billedet" required />
+                <input :id="'gifAlt' + index" type="text" v-model="answer.gifAlt" placeholder="Beskriv billedet"
+                  required />
               </div>
             </div>
             <div class="form-group checkbox-group">
@@ -41,7 +42,9 @@
             </div>
           </div>
         </div>
-        <button type="submit" class="add-button">Tilføj Spørgsmål</button>
+        <button type="submit" class="add-button">
+          {{ question ? 'Opdater Spørgsmål' : 'Tilføj Spørgsmål' }}
+        </button>
       </form>
       <GifModal :isVisible="gifModalVisible" @close="closeGifModal" @select="selectGif" />
     </div>
@@ -59,16 +62,16 @@ export default {
     modalTitle: String,
     showFeedback: Boolean,
     addQuestion: Function,
-    updateQuestion: Function, // Tilføj denne prop
+    updateQuestion: Function,
     closeModal: Function,
-    question: Object
+    question: Object,
   },
   data() {
     return {
       localQuestion: this.getInitialQuestionData(),
       activeAnswerIndex: null,
       gifModalVisible: false,
-      gifModalIndex: null
+      gifModalIndex: null,
     };
   },
   methods: {
@@ -83,21 +86,23 @@ export default {
             answers: this.showFeedback
               ? [
                   { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
-                  { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false }
+                  { text: '', gifUrl: '', gifAlt: '', feedbackHeading: '', feedback: '', isCorrect: false },
                 ]
               : [
                   { text: '', isCorrect: false },
                   { text: '', isCorrect: false },
                   { text: '', isCorrect: false },
-                  { text: '', isCorrect: false }
-                ]
+                  { text: '', isCorrect: false },
+                ],
           };
     },
     submitQuestion() {
       if (this.question) {
-        this.updateQuestion(this.localQuestion); // Ret denne linje
+        this.updateQuestion(this.localQuestion);
+        this.$emit('showSnackbar', 'Spørgsmål opdateret!'); // Emit event til forælder
       } else {
         this.addQuestion(this.localQuestion);
+        this.$emit('showSnackbar', 'Spørgsmål tilføjet!'); // Emit event til forælder
       }
       this.closeModal();
     },
@@ -114,7 +119,7 @@ export default {
         this.localQuestion.answers[this.gifModalIndex].gifAlt = altTag; // Gem ALT-tagget
       }
       this.gifModalVisible = false;
-    }
+    },
   },
   watch: {
     isVisible(newVal) {
@@ -123,8 +128,8 @@ export default {
       } else {
         this.localQuestion = this.getInitialQuestionData();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

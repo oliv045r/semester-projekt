@@ -107,8 +107,8 @@ export default {
       checkForSwipeAnimation() {
          const level = this.$route.params.level;
          const currentQuestion = this.questions[this.currentQuestionIndex];
-         // Vis animation kun for niveau 1 og spørgsmål med id "q1733840920298"
-         if (level === "1" && currentQuestion && currentQuestion.questionId === "q1733840920298") {
+         // Vis animation kun for niveau 1 og spørgsmål med id "q1734128936732"
+         if (level === "1" && currentQuestion && currentQuestion.questionId === "q1734128936732") {
             this.showSwipeAnimation = true;
             setTimeout(() => {
                const animationElement = document.querySelector(".swipe-animation");
@@ -278,6 +278,8 @@ export default {
 .question-number {
    font-size: 25px;
    font-weight: 600;
+   text-align: left; /* Sørger for venstrejustering */
+    width: 90%; /* Tvinger bredden til at fylde containeren */
 }
 
 .question {

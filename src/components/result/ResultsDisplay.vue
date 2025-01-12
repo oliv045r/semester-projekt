@@ -28,7 +28,12 @@
 
 <script>
 export default {
-    props: ["answeredQuestions"],
+    props: {
+        answeredQuestions: {
+            type: Array,       
+            required: true,
+        },
+    },
     data() {
         return {
             itemsAnimated: 0,

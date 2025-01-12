@@ -1,6 +1,10 @@
 <template>
     <div class="shadow-parent">
-        <button tabindex="-1" class="primary-button" :class="{ 'secondary-bg': secondary }">
+        <button
+            tabindex="-1"
+            class="primary-button"
+            :class="{ 'secondary-bg': secondary, bold: bold }"
+        >
             <slot></slot>
         </button>
     </div>
@@ -14,6 +18,10 @@ export default {
             type: Boolean,
             default: false, // Bestemmer, om knappen skal have secondary baggrundsfarve
         },
+        bold: {
+            type: Boolean,
+            default: false, // Bestemmer, om teksten skal være fed
+        },
     },
 };
 </script>
@@ -26,7 +34,7 @@ export default {
     /* Sørger for samme bredde */
     max-width: 300px;
     /* Valgfri maksimal bredde */
-    filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.8));
 }
 
 .primary-button {
@@ -35,7 +43,7 @@ export default {
     background-color: var(--main-color);
     color: var(--text-color);
     font-size: 16px;
-    font-weight: bold;
+    font-weight: normal;
     text-align: center;
     padding: 16px 0;
     /* Juster padding for samme højde */
@@ -44,6 +52,12 @@ export default {
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-family: Poppins;
+}
+
+.primary-button.bold {
+    font-weight: bold;
+    font-size: 18px;
+    background-color: var(--secondary-color);
 }
 
 .primary-button.secondary-bg {

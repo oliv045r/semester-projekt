@@ -13,7 +13,7 @@
                 <li><router-link tabindex="104" to="/admin">Admin</router-link></li>
                 <li><router-link to="/user-settings">Indstillinger</router-link></li>
                 <li><router-link to="/intro-swipe">Leaderboard</router-link></li>
-                <li><button tabindex="105" class="signOutButton" @click="signOut">Log ud</button></li>
+               
             </ul>
             <button
                 tabindex="101" 
@@ -139,20 +139,22 @@ export default {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
+
+/* Mobile navigation menu */
 /* Mobile navigation menu */
 .nav-links {
     position: absolute;
     top: 100%; /* Placeret lige under headeren */
-    right: 0;
-    left: 0; /* Sørger for, at menuen strækker sig fra kant til kant */
+    right: 0; /* Sørger for, at menuen starter fra højre */
+    left: auto; /* Fjern venstrejustering */
     background-color: var(--background-color);
     flex-direction: column;
-    width: 100%; /* Fylder hele skærmens bredde */
-    max-width: 400px; /* Begrænset bredde på små skærme */
-    margin: 0 auto; /* Center menuen */
+    margin: 0;
     height: 0;
+    font-size: 18px;
     list-style: none;
     overflow: hidden;
+    width: 100%;
     color: var(--text-color);
     opacity: 0;
     transform: translateY(-10px);
@@ -160,6 +162,8 @@ export default {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
+
+
 
 /* Når menuen er åben */
 .nav-links.nav-open {
@@ -169,35 +173,50 @@ export default {
     padding: 1rem;
 }
 
-/* Navigation links styling */
-.nav-links li {
-    margin: 0.5rem 0;
-    text-align: center;
+.signOutButton {
+    background-color: var(--secondary-color); /* Beholder baggrundsfarven */
+    color: var(--text-color); /* Matcher tekstfarve */
+    padding: 0.3rem 1rem; /* Matcher links */
+    margin: 0; /* Fjern ekstra margin */
+    border: none; /* Fjern kantlinjer */
+    width: 30%; /* Gør bredden ens med links */
+    text-align: center; /* Justerer teksten venstre */
+    display: block; /* Matcher display-egenskaben med links */
+    box-sizing: border-box; /* Sikrer, at padding ikke ændrer størrelsen */
+    margin-top: 10px;
 }
 
+/* Links styling */
 .nav-links a, .nav-links button {
     text-decoration: none;
     color: var(--text-color);
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+    font-size: 18px;
     border-radius: 3px;
     transition: background-color 0.2s ease-in-out;
+    display: block; /* Sørger for, at alle elementer fylder 100% af deres container */
 }
 
-.signOutButton {
-    background-color: var(--secondary-color);
+/* Justering af nav-links */
+.nav-links li {
+    margin: 0.5rem 0;
+    text-align: left;
+    margin-left: 20px;
+    padding: 0.2rem 1rem;
 }
 
-/* Responsiv styling */
+/* Responsiv styling for desktop */
 @media (min-width: 768px) {
     .nav-links {
+        display: flex;
+        justify-content: flex-end; /* Højrestiller links */
+        align-items: center;
+        gap: 1rem; /* Tilføjer mellemrum mellem links */
         position: static;
         flex-direction: row;
-        justify-content: flex-end;
         height: auto;
         opacity: 1;
         transform: none;
-        width: 100%; /* Fylder hele bredden */
+        width: 100%;
         max-width: none;
         background-color: transparent;
         overflow: visible;

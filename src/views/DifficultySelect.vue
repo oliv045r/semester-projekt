@@ -2,11 +2,11 @@
 <template>
   <div>
     <div class="dif-intro">
-      <h2>Vælg spiltype og niveau</h2>
-      <p>Lås op for flere niveauer i takt med at du spiller!</p>
+      <h1>Vælg spiltype og niveau</h1>
+      <p>Lås op for flere niveauer ved at svare rigtigt!</p>
     </div>
     <div class="quiz-container">
-      <h3 class ="swipe-header">To valg, et swipe</h3>
+      <h2 class ="swipe-header">To valg, et swipe</h2>
       <p>Swipe dig til det mest bæredygtige valg blandt to valgmuligheder</p>
       <div class="btn-container quiz-swipe">
         <router-link 
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="quiz-container">
-      <h3 class="quiz-header">Quiz dig selv</h3>
+      <h2 class="quiz-header">Quiz dig selv</h2>
       <p>Har du lært noget af at swipe? Test hvor meget du kan huske!</p>
       <div class="btn-container quiz-swipe">
         <router-link 
@@ -105,15 +105,20 @@ export default {
 
 .swipe-header {
   color: var(--secondary-color);
+  font-size: 19px;
 }
 
 .quiz-header {
   color: var(--main-color);
+  font-size: 19px;
 }
 
-h2{
+h1{
   color: var(--secondary-color);
+  font-size: 26px;
 }
+
+h
 
 .quiz-container h3,
 .quiz-container p {
@@ -129,7 +134,7 @@ h2{
   color: white;
   font-size: 20px;
   font-weight: 600;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
   background-color: var(--background-difficulty-button);
 }
 
